@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 // app
 import { AuthRoutingModule } from './auth-routing.module';
 import { CONTAINERS } from './containers';
+import { UiModule } from '@nomades-network/ui';
 
 
 @NgModule({
@@ -11,7 +11,7 @@ import { CONTAINERS } from './containers';
     ...CONTAINERS
   ],
   imports: [
-    CommonModule,
+    UiModule,
     AuthRoutingModule
   ]
 })
