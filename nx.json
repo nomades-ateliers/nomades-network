@@ -19,6 +19,12 @@
     },
     "api-interfaces": {
       "tags": []
+    },
+    "ui": {
+      "tags": []
+    },
+    "ngrx": {
+      "tags": []
     }
   }
 }

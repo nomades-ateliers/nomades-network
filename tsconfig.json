@@ -16,7 +16,11 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@nomades-network/api-interfaces": ["libs/api-interfaces/src/index.ts"]
+      "@nomades-network/api-interfaces": ["libs/api-interfaces/src/index.ts"],
+      "@nomades-network/ui": ["libs/ui/src/index.ts"],
+      "@nomades-network/ng-rx-state": ["libs/ng-rx-state/src/index.ts"],
+      "@nomades-network/ngrx": ["libs/ngrx/src/index.ts"],
+      "@nomades-network/utils": ["libs/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
