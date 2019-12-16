@@ -1,10 +1,11 @@
 // libs
+import { IUser, User } from '@nomades-network/api-interfaces';
 
 // app
 import { TCurrentUserActions, CurrentUserActions } from './currentUser.actions';
 
 // tslint:disable-next-line:no-empty-interface
-export interface ICurrentUserState {}
+export interface ICurrentUserState extends IUser {}
 export const intitialState: ICurrentUserState | null = null;
 
 export function reducer(
@@ -18,7 +19,7 @@ export function reducer(
       if (!action.payload.user) {
         return state;
       }
-      return Object.assign({}, action.payload.user);
+      return new User(Object.assign({}, action.payload.user));
     }
     case CurrentUserActions.ERROR: {
       return intitialState;

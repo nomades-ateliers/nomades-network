@@ -1,4 +1,5 @@
 import { NgRxAction } from '../ngrx.actions';
+import { IUser } from '@nomades-network/api-interfaces';
 
 /**
  * PATTERN DESIGN:
@@ -14,7 +15,7 @@ export const CurrentUserActions = {
   ERROR: '[CurrentUser] Error'
 };
 
-export class LoadSuccessAction extends NgRxAction<any> {
+export class LoadSuccessAction extends NgRxAction<{user: IUser}> {
   type = CurrentUserActions.LOAD_SUCCESS;
 }
 export class UpdateCurrentUserAction extends NgRxAction<any> {
