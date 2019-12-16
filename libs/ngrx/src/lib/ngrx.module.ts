@@ -1,8 +1,12 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { StoreModule } from '@ngrx/store';
+
+// libs
 import { throwIfAlreadyLoaded } from '@nomades-network/utils';
-import { CurrentUserStoreModule } from './currentUser/currentUser-store.module';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+
+// app
+import { CurrentUserStoreModule } from './currentUser/currentUser-store.module';
 
 @NgModule({
   imports: [
