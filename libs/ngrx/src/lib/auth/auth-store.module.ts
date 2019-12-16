@@ -5,10 +5,13 @@ import { throwIfAlreadyLoaded } from '@nomades-network/utils';
 
 import * as fromAuth from './auth.reducer';
 import { AuthStoreService } from './auth-store.service';
+import { AuthEffects } from './auth.effects';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   imports: [
-    StoreModule.forFeature('auth', fromAuth.reducer)
+    StoreModule.forFeature('auth', fromAuth.reducer),
+    EffectsModule.forFeature([AuthEffects])
   ],
   exports: [StoreModule],
   providers: [AuthStoreService]

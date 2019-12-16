@@ -15,5 +15,13 @@ export class AuthPageComponent extends AuthPageBaseComponent implements OnInit {
   constructor( _store: AuthStoreService) {
     super(_store);
   }
+
+  test() {
+    console.log('send action');
+    
+    this._store.dispatchLoginAction({
+      email: 'test@test.ch'
+    })
+  }
   
 }

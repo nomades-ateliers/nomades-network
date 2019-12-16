@@ -8,16 +8,16 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 // app
 import { CurrentUserStoreModule } from './currentUser/currentUser-store.module';
 import { AuthStoreModule } from './auth/auth-store.module';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   imports: [
     StoreModule.forRoot({}),
-    CurrentUserStoreModule,
-    AuthStoreModule,
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
       // logOnly: true, // Restrict extension to log-only mode
     }),
+    EffectsModule.forRoot([])
   ]
 })
 export class NgrxModule {

@@ -9,4 +9,6 @@ export interface Message {
 export interface APIResponse {
   currentUser?: IUser,
   users?: IUser[]
+  message?: string;
+  error?: any
 }

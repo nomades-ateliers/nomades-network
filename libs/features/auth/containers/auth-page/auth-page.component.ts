@@ -11,7 +11,7 @@ export abstract class AuthPageBaseComponent implements OnInit {
   public loginBtn = true;
   
   constructor(
-    private readonly _store: AuthStoreService
+    protected readonly _store: AuthStoreService
   ) {
 
   }
