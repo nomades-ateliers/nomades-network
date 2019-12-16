@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
-import { NgrxModule } from '@nomades-network/ngrx';
+import { NgrxModule } from '@nomades-network/ngrx/index';
 
 @NgModule({
   declarations: [AppComponent],
