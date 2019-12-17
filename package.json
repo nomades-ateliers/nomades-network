@@ -26,8 +26,8 @@
     "workspace-schematic": "nx workspace-schematic",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
-    "deploy:gh": "sh tools/scripts/deploy-gh-page.sh dist/apps/nomades-pwa",
-    "deploy:gh:ci": "git subtree push --prefix dist/apps/nomades-pwa origin gh-pages"
+    "deploy:pwa": "ng deploy nomades-pwa",
+    "deploy:pwa:ci": "ng deploy nomades-pwa --repo=https://github.com/nomades-ateliers/nomades-network.git --name=$GIT_USER_NAME --email=$GIT_USER_EMAIL"
   },
   "private": true,
   "dependencies": {
