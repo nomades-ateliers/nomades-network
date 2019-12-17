@@ -19,6 +19,7 @@
       "@nomades-network/api-interfaces": ["libs/api-interfaces/src/index.ts"],
       "@nomades-network/ui": ["libs/ui/src/index.ts"],
       "@nomades-network/ngrx/*": ["libs/ngrx/src/*"],
+      "@nomades-network/core/*": ["libs/core/*"],
       "@nomades-network/features/*": ["libs/features/*"],
       "@nomades-network/utils": ["libs/utils/src/index.ts"]
     }
