@@ -5,7 +5,13 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NgrxModule } from '@nomades-network/ngrx/index';
 import { AppRoutingModule } from './app-routing.module';
+import { AuthGuard } from '@nomades-network/core/guards/auth/auth.guard';
+import { NoAuthGuard } from '@nomades-network/core/guards/no-auth/no-auth.guard';
 
+const GUARDS = [
+  AuthGuard,
+  NoAuthGuard
+];
 
 @NgModule({
   declarations: [AppComponent],
@@ -15,7 +21,9 @@ import { AppRoutingModule } from './app-routing.module';
     NgrxModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    ...GUARDS
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
