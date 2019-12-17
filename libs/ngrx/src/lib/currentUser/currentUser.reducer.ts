@@ -1,5 +1,5 @@
 // libs
-import { IUser, User } from '@nomades-network/api-interfaces';
+import { IUser, User, APIResponse } from '@nomades-network/api-interfaces';
 
 // app
 import { TCurrentUserActions, CurrentUserActions } from './currentUser.actions';
@@ -19,7 +19,7 @@ export function reducer(
       if (!action.payload.user) {
         return state;
       }
-      return new User(Object.assign({}, action.payload.user));
+      return new User(Object.assign({}, (action.payload as APIResponse).currentUser));
     }
     case CurrentUserActions.ERROR: {
       return intitialState;
