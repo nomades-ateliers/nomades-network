@@ -25,7 +25,9 @@
     "update:check": "ng update",
     "workspace-schematic": "nx workspace-schematic",
     "dep-graph": "nx dep-graph",
-    "help": "nx help"
+    "help": "nx help",
+    "deploy:gh": "sh tools/scripts/deploy-gh-page.sh",
+    "deploy:gh:ci": "git subtree push --prefix dist/apps/nomades-pwa origin gh-pages"
   },
   "private": true,
   "dependencies": {
