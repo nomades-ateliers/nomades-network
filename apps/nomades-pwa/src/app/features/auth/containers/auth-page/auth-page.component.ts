@@ -18,10 +18,9 @@ export class AuthPageComponent extends AuthPageBaseComponent implements OnInit {
 
   test() {
     console.log('send action');
-    
     this._store.dispatchLoginAction({
       email: 'test@test.ch'
-    })
+    });
   }
   
 }
