@@ -9,17 +9,17 @@ assignees: ''
 # Bug Report
 
 **Projects:**
-[ ] **api**
-[ ] **pwa**
+- [x] **api**
+- [ ] **pwa**
 
 **Librarys:**
-[ ] **api-interfaces**
-[ ] **api-schemas**
-[ ] **core**
-[ ] **features**
-[ ] **ngrx**
-[ ] **ui**
-[ ] **utils**
+- [ ] **api-interfaces**
+- [ ] **api-schemas**
+- [ ] **core**
+- [ ] **features**
+- [ ] **ngrx**
+- [ ] **ui**
+- [ ] **utils**
 
 **Current behavior:**
 <!-- Describe how the bug manifests. -->
