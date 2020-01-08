@@ -7,8 +7,10 @@ export interface Message {
 }
 
 export interface APIResponse {
-  currentUser?: IUser,
-  users?: IUser[]
+  statusCode: number;
+  currentUser?: IUser;
+  users?: IUser[];
+  token?: string;
   message?: string;
   error?: any
 }
