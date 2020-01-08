@@ -1,15 +1,15 @@
-import { Observable, of, from } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { map, catchError } from 'rxjs/operators';
-import { APIResponse } from '@nomades-network/api-interfaces';
 import { Injectable } from '@angular/core';
-
+import { HttpClient } from '@angular/common/http';
+import { Observable, of, from } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+// libs
+import { APIResponse } from '@nomades-network/api-interfaces';
 
 @Injectable()
 export class AuthService {
-  private readonly _authUrl: string = '/auth';
-  private readonly _isAuthUrl: string = '/auth/isauth';
-  private readonly _signUpUrl: string = '/auth/signin';
+  private readonly _isAuthUrl: string =   '/api/users/isauth';
+  private readonly _loginUrl: string =    '/api/users/login';
+  private readonly _signUpUrl: string =   '/api/users/create';
 
   constructor(private _http: HttpClient) {
   }
@@ -21,13 +21,14 @@ export class AuthService {
     return this.dellToken();
   }
 
-  isAuth(loadUserData = false): Observable<any> {
+  isAuth(loadUserData = false): Observable<APIResponse> {
     return this._http
-      .get(this._isAuthUrl + (loadUserData ? '?loadUserData=true' : ''))
+      .get<APIResponse>(this._isAuthUrl + (loadUserData ? '?loadUserData=true' : ''))
       .pipe(
-        map(res => res || {}),
+        map(res => res || null),
         catchError(res =>
           of({
+            statusCode: (res || {}).statusCode || 500,
             error: res,
             message:
               (res.error || {}).message ||
@@ -48,13 +49,14 @@ export class AuthService {
     }
   ): Observable<APIResponse> {
     return this._http
-      .post(this._authUrl, {
+      .post<APIResponse>(this._loginUrl, {
         email: _creds.email,
         password: _creds.password
       })
       .pipe(
         catchError(res =>
           of({
+            statusCode: (res || {}).statusCode || 500,
             error: res,
             message:
               (res.error || {}).message ||
@@ -69,11 +71,10 @@ export class AuthService {
     email: string;
     password: string;
   }): Observable<APIResponse> {
-    console.log('_payload', _payload);
-
-    return this._http.post(this._signUpUrl, _payload).pipe(
+    return this._http.post<APIResponse>(this._signUpUrl, _payload).pipe(
       catchError(res =>
         of({
+          statusCode: (res || {}).statusCode || 500,
           error: res,
           message: (res.error || {}).message || res.message || 'Signup failed!'
         })
