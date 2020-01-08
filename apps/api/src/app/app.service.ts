@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Message } from '@nomades-network/api-interfaces';
+import { Message, APIResponse } from '@nomades-network/api-interfaces';
 
 @Injectable()
 export class AppService {
-  getData(): Message {
-    return { message: 'Welcome to api!' };
+  getData(): APIResponse {
+    return { statusCode: 200, message: 'Welcome to api!' };
   }
 }
