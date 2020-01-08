@@ -25,6 +25,9 @@
     },
     "ngrx": {
       "tags": []
+    },
+    "api-schemas": {
+      "tags": ["api-schemas"]
     }
   }
 }

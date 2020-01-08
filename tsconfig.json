@@ -21,7 +21,8 @@
       "@nomades-network/ngrx/*": ["libs/ngrx/src/*"],
       "@nomades-network/core/*": ["libs/core/*"],
       "@nomades-network/features/*": ["libs/features/*"],
-      "@nomades-network/utils": ["libs/utils/src/index.ts"]
+      "@nomades-network/utils": ["libs/utils/src/index.ts"],
+      "@nomades-network/api-schemas": ["libs/api-schemas/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
