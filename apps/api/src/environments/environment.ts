@@ -8,7 +8,7 @@ export const environment = {
   // database
   dbUser: process.env.DB_USER || '',
   dbPwd: process.env.DB_PWD || '',
-  dbBdd: process.env.DB_DDB || 'test',
+  dbBdd: process.env.DB_DDB || 'nomades-network-test',
   dbHost: process.env.DB_HOST || 'localhost',
   secretToken: 'bad secret token',
   // methods
