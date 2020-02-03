@@ -7,7 +7,7 @@ import { AuthStoreService } from '@nomades-network/ngrx/lib/auth/auth-store.serv
 export abstract class AuthPageBaseComponent implements OnInit {
   
   public user: IUser | null;
-  public userForm: FormGroup;
+  public authForm: FormGroup;
   public loginBtn = true;
   
   constructor(
@@ -16,7 +16,7 @@ export abstract class AuthPageBaseComponent implements OnInit {
 
   }
   ngOnInit() {
-    this.userForm = new FormGroup({
+    this.authForm = new FormGroup({
       email: new FormControl(
         'demo@demo.ch',
         Validators.compose([
@@ -35,18 +35,18 @@ export abstract class AuthPageBaseComponent implements OnInit {
   }
 
 
-  send(): void {
-    if (!this.userForm.valid) {
+  send(actionName: string = 'login'): void {
+    if (!this.authForm.valid) {
       // TODO display error
-      console.log('form not valid', this.userForm.valid);
+      console.log('form not valid', this.authForm.valid);
       return;
     }
-    switch (this.loginBtn) {
-      case true:
-        this._store.dispatchLoginAction(this.userForm.value);
+    switch (true) {
+      case actionName === 'login' :
+        this._store.dispatchLoginAction(this.authForm.value);
         break;
-      case false:
-        this._store.dispatchCreateAction(this.userForm.value);
+      case actionName === 'create':
+        this._store.dispatchCreateAction(this.authForm.value);
         break;
       default:
         break;
