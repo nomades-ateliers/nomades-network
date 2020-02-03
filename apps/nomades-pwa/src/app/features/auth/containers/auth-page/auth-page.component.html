@@ -1,9 +1,23 @@
 <div style="text-align:center">
-  <h1>Welcome to nomades-pwa!</h1>
-  <h2>hello auth page</h2>
-  <img
-    width="450"
-    src="https://raw.githubusercontent.com/nrwl/nx/master/nx-logo.png"
-  />
+
+  <form [formGroup]="authForm">
+    <div>
+      <label>Email:</label>
+      <input formControlName="email" type="email" />
+    </div>
+    <div>
+      <label>Password:</label>
+      <input formControlName="password" type="password" />
+    </div>
+    <div (click)="(loginBtn) ? send('login') : send('create')">
+      {{(loginBtn) ? 'Se connecter' : 'Créer un compte'}}
+    </div>
+
+    <hr/>
+    
+    <div>
+      {{ (loginBtn) ? "Vous n'avez pas encore de compte?" : "Vous avez déja un compte?"}}<br />
+      <a href="#" (click)="$event.preventDefault(); loginBtn = !loginBtn " class="ion-color-light">{{ (loginBtn) ? "Creer un compte" : "Se connecter avec un compte existant"}}</a>
+    </div>	
+  </form>
 </div>
-<button (click)="send()">log</button>
