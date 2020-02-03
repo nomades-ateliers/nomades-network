@@ -11,6 +11,7 @@ import { AuthService } from '@nomades-network/features/auth/services/auth.servic
 // app
 import { AuthRoutingModule } from './auth-routing.module';
 import { CONTAINERS } from './containers';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { CONTAINERS } from './containers';
   ],
   imports: [
     UiModule,
+    ReactiveFormsModule,
     CurrentUserStoreModule,
     AuthStoreModule,
     AuthRoutingModule
