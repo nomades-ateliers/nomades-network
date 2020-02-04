@@ -10,6 +10,7 @@ export class User implements IUser {
   public lastname?: string;
   public created?: number;
   // datas
+  public avatar?: string;
   public desc?: string;
   public job?: string;
   public skills?: {_id?: string; name?: string}[];

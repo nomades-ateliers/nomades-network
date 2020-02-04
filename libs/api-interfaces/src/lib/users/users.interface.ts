@@ -14,6 +14,7 @@ export interface IUser {
   lastname?: string;
   created?: number;
   // datas
+  avatar?: string;
   desc?: string;
   job?: string;
   skills?: {_id?: string; name?: string}[];
