@@ -1,3 +1,6 @@
+import { IAddress } from '../address';
+import { ITraining } from '../training';
+
 export interface IAuth {
   _id: string;
   password: string;
@@ -10,4 +13,13 @@ export interface IUser {
   firstname?: string;
   lastname?: string;
   created?: number;
+  // datas
+  desc?: string;
+  job?: string;
+  skills?: {_id?: string; name?: string}[];
+  contact?: IAddress;
+  trainings?: (ITraining & {
+    cerfifiedState?: string;
+    certifiedProject?: string
+  })[];
 }
