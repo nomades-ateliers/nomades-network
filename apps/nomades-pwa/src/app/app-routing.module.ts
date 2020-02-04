@@ -15,6 +15,11 @@ const ROUTES: Route[] = [
     canActivate: [NoAuthGuard]
   },
   {
+    path: 'user',
+    loadChildren: () => import('./features/user/user.module').then(m => m.UserModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: '', redirectTo: 'auth', pathMatch: 'full'
   },
 ];

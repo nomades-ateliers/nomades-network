@@ -1,0 +1,33 @@
+nomades-network-user-page {
+
+  ion-avatar {
+    margin: 2rem auto;
+  }
+  // icon slot start alignement with item multiline
+  .icon_align {
+    margin-top: 1.5rem;
+  }
+  ion-card {
+    cursor: auto !important;
+  }
+  ion-item-divider {
+    border: none;
+
+    > ion-icon, ion-label {
+      color: #757575;
+    }
+  }
+  ion-input {
+    ::placeholder {
+      font-style: italic;
+      font-size: 80%;      
+    }
+  }
+  ion-label.label-stacked {
+    margin-bottom: 0.5rem !important;
+  }
+  ion-note.change_pwd {
+    margin-top: -0.5rem;
+    text-decoration: none;
+  }
+}

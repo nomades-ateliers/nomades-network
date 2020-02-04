@@ -1,0 +1,161 @@
+<ion-header>
+  <passpoly-app-header
+    [displayOptionsBtn]="false"
+    title="Parametres utilisateur"></passpoly-app-header>
+</ion-header>
+<ion-content class="ion-content">
+  <ion-grid class="ion-padding-top">
+    <ion-row class="ion-padding-top ion-margin-bottom">
+      <ion-col class="ion-margin-bottom">
+        <ion-label class="ion-padding-start">
+          Authentification
+        </ion-label>
+        <ion-card>
+          <ion-card-header color="light" class="ion-text-center ion-padding">
+            <ion-avatar *ngIf="(user|gavatar|async) as avatar">
+              <ion-img [src]="avatar"></ion-img>
+            </ion-avatar>
+            <ion-note class="ion-margin ion-padding">
+              <b>{{user?.lastname}} {{user?.firstname}}</b>
+            </ion-note>
+            <br/>
+            <br/>
+          </ion-card-header>
+          <ion-card-content class="ion-margin-bottom">
+            <form [formGroup]="authForm">
+              <ion-list class="ion-padding-top">
+                <ion-item lines="none">
+                  <ion-label color="dark" position="floating">
+                    Email de connexion
+                  </ion-label>
+                  <ion-icon class="icon_align" size="small" name="mail" slot="start"></ion-icon>
+                  <ion-input disabled="true" type="email" formControlName="email"></ion-input>
+                  <!-- <ion-text >{{authForm?.value?.email}}</ion-text> -->
+                </ion-item>
+                <div class="ion-margin-bottom" (click)="changeData($event, 'pwd')">
+                  <ion-item lines="none" >
+                    <ion-label  position="floating">
+                      Mot de passe
+                    </ion-label>
+                    <ion-icon class="icon_align" name="key" size="small" slot="start"></ion-icon>
+                    <ion-input disabled="true" type="password" value="***************"></ion-input>
+                    <ion-note color="primary" class="change_pwd">
+                      modifier
+                    </ion-note>
+                  </ion-item>
+                </div>
+              </ion-list>
+            </form>
+          </ion-card-content>
+          <ion-button
+              (click)="save(authForm.value)"
+              [color]="(!authForm.pristine && authForm.valid) ? 'primary' : null"
+              [fill]="(authForm.pristine || !authForm.valid) ? 'outline' : 'solid'"
+              [disabled]="authForm.pristine || !authForm.valid" 
+              class="ion-margin">
+                Enregistrer</ion-button>
+        </ion-card>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="6" class="ion-margin-bottom">
+        <ion-label class="ion-padding-start">
+          Informations complémentaires 
+        </ion-label>
+        <ion-card>
+          <ion-card-header color="light">
+            <ion-item-divider color="light">
+              <ion-icon size="small" slot="start" name="person"></ion-icon>
+              <ion-label>Civilité</ion-label>
+            </ion-item-divider>
+          </ion-card-header>
+          <ion-card-content class="ion-padding-top">
+            <form [formGroup]="userDataForm" class="ion-margin-bottom ion-padding-top">
+              <ion-item-group class="ion-padding-bottom">
+                <ion-gird>
+                  <ion-row>
+                    <ion-col>
+                      <ion-item lines="none">
+                        <ion-label position="floating">
+                          Nom
+                        </ion-label>
+                        <ion-input formControlName="lastname" type="text" placeholder="aucune donnée"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col>
+                      <ion-item lines="none">
+                        <ion-label position="floating">
+                          Prénom
+                        </ion-label>
+                        <ion-input formControlName="firstname" type="text" placeholder="aucune donnée"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                  </ion-row>
+                </ion-gird>
+              </ion-item-group>
+            </form>
+          </ion-card-content>
+          <ion-card-header color="light">
+            <ion-item-divider color="light">
+              <ion-icon size="small" slot="start" name="home"></ion-icon>
+              <ion-label>Adresse de contact</ion-label>
+            </ion-item-divider>
+          </ion-card-header>
+          <ion-card-content class="ion-padding-top">
+            <form [formGroup]="userDataForm" class="ion-margin-bottom ">
+              <ion-item-group formGroupName="address" class="ion-margin-top">
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>
+                      <ion-item lines="none">
+                        <ion-label position="floating">Nom de la rue</ion-label>
+                        <ion-input formControlName="street" type="text" placeholder="aucune donnée"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col>
+                      <ion-item lines="none">
+                        <ion-label position="floating">Numéro de la rue / allée </ion-label>
+                        <ion-input formControlName="street_number" type="text" placeholder="aucune donnée"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <ion-item lines="none">
+                        <ion-label position="floating">Code postal (NPA)</ion-label>
+                        <ion-input formControlName="zipCode" type="text" placeholder="aucune donnée"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col>
+                      <ion-item lines="none">
+                        <ion-label position="floating">Ville</ion-label>
+                        <ion-input formControlName="city" type="text" placeholder="aucune donnée"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <ion-item lines="none">
+                        <ion-label position="floating">Pays</ion-label>
+                        <ion-input formControlName="country" type="text" placeholder="aucune donnée"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-item-group>
+            </form>
+          </ion-card-content>
+          <ion-button 
+            [color]="(!userDataForm.pristine && userDataForm.valid) ? 'primary' : null"
+            [fill]="(userDataForm.pristine || !userDataForm.valid) ? 'outline' : 'solid'"
+            [disabled]="userDataForm.pristine || !userDataForm.valid" 
+            (click)="save(userDataForm?.value)"
+            class="ion-margin">Enregistrer</ion-button>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-padding-top ion-margin-bottom">
+      <ion-col>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
