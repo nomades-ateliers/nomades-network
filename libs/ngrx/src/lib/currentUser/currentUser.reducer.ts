@@ -16,7 +16,7 @@ export function reducer(
 
     case CurrentUserActions.LOAD_SUCCESS:
     case CurrentUserActions.UPDATE_SUCCESS: {
-      if (!action.payload.user) {
+      if (!action.payload.currentUser) {
         return state;
       }
       return new User(Object.assign({}, (action.payload as APIResponse).currentUser));

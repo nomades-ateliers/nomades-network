@@ -14,7 +14,7 @@ export class AuthPageComponent extends AuthPageBaseComponent implements OnInit {
   
   constructor( _store: AuthStoreService) {
     super(_store);
-    this.loginBtn = false;
+    this.loginBtn = true;
   }
   
 }

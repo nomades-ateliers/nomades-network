@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, from } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, tap } from 'rxjs/operators';
 // libs
 import { APIResponse } from '@nomades-network/api-interfaces';
 
@@ -26,6 +26,7 @@ export class AuthService {
       .get<APIResponse>(this._isAuthUrl + (loadUserData ? '?loadUserData=true' : ''))
       .pipe(
         map(res => res || null),
+        // tap(state => console.log('--- service: ',state)),
         catchError(res =>
           of({
             statusCode: (res || {}).statusCode || 500,

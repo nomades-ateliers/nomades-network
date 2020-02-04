@@ -1,12 +1,13 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
 import { NgrxModule } from '@nomades-network/ngrx/index';
 import { AppRoutingModule } from './app-routing.module';
+// libs
 import { AuthGuard } from '@nomades-network/core/guards/auth/auth.guard';
 import { NoAuthGuard } from '@nomades-network/core/guards/no-auth/no-auth.guard';
+// app
+import { CoreModule } from './core/core.module';
 
 const GUARDS = [
   AuthGuard,
@@ -16,10 +17,9 @@ const GUARDS = [
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    BrowserModule,
-    HttpClientModule,
+    CoreModule,
     NgrxModule,
-    AppRoutingModule
+    AppRoutingModule,
   ],
   providers: [
     ...GUARDS

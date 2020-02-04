@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 
 import { Router, ActivatedRoute } from '@angular/router';
-import { Store, ActionType } from '@ngrx/store';
+import { Store, ActionType, select, Action } from '@ngrx/store';
 import { IAuthState } from './auth.reducer';
 import * as Auth from './auth.actions';
 import * as CurrentUser from '../currentUser/currentUser.actions';
-import { switchMap, catchError, exhaustMap, map, tap } from 'rxjs/operators';
+import { switchMap, catchError, exhaustMap, map, tap, withLatestFrom } from 'rxjs/operators';
 // features
 import { AuthService } from '@nomades-network/features/auth/services/auth.service';
 import { of, concat } from 'rxjs';
+import { ICurrentUserState } from '../currentUser/currentUser.reducer';
 
 @Injectable()
 export class AuthEffects {
@@ -26,8 +27,8 @@ export class AuthEffects {
   @Effect() loginAction$ = this._action$.pipe(
     ofType(Auth.AuthActions.LOGIN),
     switchMap((action: any) => this._auth.doAuth(action.payload)),
-    switchMap((result: any) =>
-      result.user
+    switchMap((result) =>
+      result.currentUser
         ? of(new Auth.LoginSuccessAction(result))
         : this._handleErrors(result as any)
     ),
@@ -36,20 +37,26 @@ export class AuthEffects {
 
   @Effect() checkMainAction$ = this._action$.pipe(
     ofType(Auth.AuthActions.CHECK_AUTH),
-    switchMap((action: any) => {
-      return this._auth.isAuth(action.payload);
+    withLatestFrom(
+      this._store.pipe(select(state => state['currentUser']))
+    ),
+    switchMap((res: [Action, ICurrentUserState]) => {
+      const [action, currentUser = null] = res;
+      // console.log('-effect: ', currentUser);
+      
+      return this._auth.isAuth(action['payload']);
     }),
-    switchMap((res: any) =>
-      res.token
+    switchMap((res) =>
+      res.currentUser
         ? concat(
             of(
               new Auth.CheckAuthSuccessAction(res),
-              new CurrentUser.LoadSuccessAction(res)
+              new CurrentUser.LoadSuccessAction({currentUser: res.currentUser})
             )
           )
         : concat(
             of(
-              new Auth.CheckAuthNoUserSuccessAction(res)
+              new Auth.CheckAuthNoUserSuccessAction()
             )
           )
     ),
@@ -86,7 +93,11 @@ export class AuthEffects {
   );
 
   @Effect() userSuccessAction$ = this._action$.pipe(
-    ofType(Auth.AuthActions.CREATE_SUCCESS, Auth.AuthActions.LOGIN_SUCCESS),
+    ofType(
+      Auth.AuthActions.CREATE_SUCCESS,
+      Auth.AuthActions.LOGIN_SUCCESS,
+      // CurrentUser.CurrentUserActions.LOAD_SUCCESS
+    ),
     switchMap((action: any) => {
       const { payload = null } = action;
       return payload

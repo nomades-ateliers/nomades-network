@@ -15,7 +15,7 @@ export const CurrentUserActions = {
   ERROR: '[CurrentUser] Error'
 };
 
-export class LoadSuccessAction extends NgRxAction<{user: IUser}> {
+export class LoadSuccessAction extends NgRxAction<{currentUser: IUser}> {
   type = CurrentUserActions.LOAD_SUCCESS;
 }
 export class UpdateCurrentUserAction extends NgRxAction<any> {

@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { COMPONENTS } from './components';
 import { HttpClientModule } from '@angular/common/http';
+// import { IonicModule } from '@ionic/angular';
+import { COMPONENTS } from './components';
 
 const MODULES = [
   CommonModule,
-  HttpClientModule
+  // HttpClientModule,
+  // IonicModule
 ];
 
 @NgModule({

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { filter, map, take } from 'rxjs/operators';
+import { filter, map, take, tap } from 'rxjs/operators';
 import * as Auth from '@nomades-network/ngrx/lib/auth/auth.actions';
 
 @Injectable()
@@ -18,17 +18,19 @@ export class NoAuthGuard implements CanActivate {
     return this.store
       .pipe(
         select(state => state),
-        map((state) =>
-          (state.currentUser)
-            ? state
-            : Object.assign({}, state, {loading: false})
-        ),
-        filter((state) => state.loading === false ),
+        tap(state => console.log(state)),
+        // map((state) =>
+        //   (state.currentUser)
+        //     ? state
+        //     : Object.assign({}, state, {loading: false})
+        // ),
+        // filter((state) => state.loading === false ),
         map((state) => {
+          
           if (!state.auth) {
             return true;
           }
-          this.router.navigate(['/home']);
+          this.router.navigate(['/index']);
           return false;
         }),
         take(1)
