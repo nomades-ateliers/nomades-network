@@ -51,7 +51,7 @@ export class AuthEffects {
         ? concat(
             of(
               new Auth.CheckAuthSuccessAction(res),
-              new CurrentUser.LoadSuccessAction({currentUser: res.currentUser})
+              new CurrentUser.LoadSuccessAction({currentUser: res.currentUser}),
             )
           )
         : concat(
@@ -60,6 +60,7 @@ export class AuthEffects {
             )
           )
     ),
+    tap(_=> console.log('in effect ...')),
     catchError((res: any) => this._handleErrors(res))
   );
 
