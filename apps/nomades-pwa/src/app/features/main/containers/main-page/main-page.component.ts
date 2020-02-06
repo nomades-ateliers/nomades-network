@@ -55,6 +55,13 @@ import { IUser } from '@nomades-network/api-interfaces';
             </ion-item>
           </ion-list>
         </ion-content>
+        <ion-footer>
+
+          <ion-item (click)="logout(menu)">
+            <ion-label>Logout</ion-label>
+          </ion-item>
+          
+        </ion-footer>
       </ion-menu>
 
       <!-- the main content -->
@@ -87,6 +94,11 @@ export class MainPageComponent  implements OnInit {
     (!path)
       ? this._router.navigate(['./'])
       : this._router.navigate(['./'+ path]);
+    menu.close();
+  }
+
+  public logout(menu: IonMenu) {
+    this._store.dispatchLogoutAction();
     menu.close();
   }
 }
