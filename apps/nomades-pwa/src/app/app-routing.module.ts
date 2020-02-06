@@ -6,17 +6,22 @@ import { NoAuthGuard } from '@nomades-network/core/guards/no-auth/no-auth.guard'
 const ROUTES: Route[] = [
   {
     path: '',
-    loadChildren: () => import('./features/main/main.module').then(m => m.MainModule),
-    canActivate: [AuthGuard]
+    children: [
+      {
+        path: 'auth',
+        loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule),
+        canActivate: [NoAuthGuard]
+      },
+      {
+        path: '',
+        loadChildren: () => import('./features/main/main.module').then(m => m.MainModule),
+        canActivate: [AuthGuard]
+      }
+    ],
   },
   {
-    path: 'auth',
-    loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule),
-    canActivate: [NoAuthGuard]
+    path: 'index', redirectTo: '', pathMatch: 'full'
   },
-  // {
-  //   path: '', redirectTo: 'auth', pathMatch: 'full'
-  // },
 ];
 
 @NgModule({

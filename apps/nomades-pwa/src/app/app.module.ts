@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 // libs
 import { NgrxModule } from '@nomades-network/ngrx/index';
+import { CurrentUserStoreModule } from '@nomades-network/ngrx/lib/currentUser/currentUser-store.module';
+
 import { AuthGuard } from '@nomades-network/core/guards/auth/auth.guard';
 import { NoAuthGuard } from '@nomades-network/core/guards/no-auth/no-auth.guard';
 // app
@@ -19,6 +21,7 @@ const GUARDS = [
   imports: [
     CoreModule,
     NgrxModule,
+    CurrentUserStoreModule,
     IonicModule.forRoot({mode: 'md'}),
     AppRoutingModule,
   ],

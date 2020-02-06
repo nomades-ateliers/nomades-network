@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 // libs
 import { UiModule } from '@nomades-network/ui';
-import { CurrentUserStoreModule } from '@nomades-network/ngrx/lib/currentUser/currentUser-store.module';
 
 
 // app
@@ -19,7 +18,6 @@ import { SharedPipeModule } from '@nomades-network/core/pipes';
   imports: [
     IonicModule,
     UiModule,
-    CurrentUserStoreModule,
     MainRoutingModule,
     SharedPipeModule
   ]
