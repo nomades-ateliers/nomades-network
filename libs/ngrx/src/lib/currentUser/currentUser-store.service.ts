@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 // libs
 import { IUser } from '@nomades-network/api-interfaces';
 // app
+import * as currentuser from './currentUser.actions';
 import { ICurrentUserState } from './currentUser.reducer';
 import { NgRxStoreService } from '../ngrx.store.service';
 import { AppState } from '../app.state';
@@ -17,6 +18,9 @@ export class CurrentUserStoreService extends NgRxStoreService {
     super();
   }
 
+  dispatchLogoutAction(): void {
+    this.dispatchAction(new currentuser.LogoutAction());
+  }
 
   // prevent error implementation of unused methodes
   dispatchCreateAction(record:  Partial<IUser>): void {}

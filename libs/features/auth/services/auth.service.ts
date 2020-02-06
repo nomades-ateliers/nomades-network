@@ -4,6 +4,7 @@ import { Observable, of, from } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 // libs
 import { APIResponse } from '@nomades-network/api-interfaces';
+import { environment } from '@nomades-network/core/environements/environment';
 
 @Injectable()
 export class AuthService {
@@ -88,6 +89,6 @@ export class AuthService {
    * See doc from `HttpService`
    */
   dellToken(): Observable<void> {
-     return from(Promise.resolve(localStorage.removeItem('environment.authToken')));
+     return from(Promise.resolve(localStorage.removeItem(environment.authToken)));
   }
 }
