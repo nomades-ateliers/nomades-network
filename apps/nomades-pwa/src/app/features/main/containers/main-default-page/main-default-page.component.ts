@@ -12,10 +12,10 @@ import { Observable } from 'rxjs';
     <ion-header>
       <ion-toolbar>
         <ion-menu-button slot="start"></ion-menu-button>
-        <ion-title>Nomades Network</ion-title>
+        <!-- <ion-title>Nomades Network</ion-title> -->
       </ion-toolbar>
     </ion-header>
-    <ion-content>
+    <ion-content class="ion-padding">
       <h1>Default Main Page</h1>
     </ion-content>
   `,
