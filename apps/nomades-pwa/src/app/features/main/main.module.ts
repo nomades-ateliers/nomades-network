@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-
+import { IonicModule } from '@ionic/angular';
 // libs
 import { UiModule } from '@nomades-network/ui';
 import { CurrentUserStoreModule } from '@nomades-network/ngrx/lib/currentUser/currentUser-store.module';
@@ -8,6 +8,7 @@ import { CurrentUserStoreModule } from '@nomades-network/ngrx/lib/currentUser/cu
 // app
 import { MainRoutingModule } from './main-routing.module';
 import { CONTAINERS } from './containers';
+import { SharedPipeModule } from '@nomades-network/core/pipes';
 
 
 @NgModule({
@@ -16,9 +17,11 @@ import { CONTAINERS } from './containers';
   ],
   providers: [],
   imports: [
+    IonicModule,
     UiModule,
     CurrentUserStoreModule,
-    MainRoutingModule
+    MainRoutingModule,
+    SharedPipeModule
   ]
 })
 export class MainModule { }

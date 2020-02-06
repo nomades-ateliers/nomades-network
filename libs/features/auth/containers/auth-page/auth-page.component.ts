@@ -30,7 +30,27 @@ export abstract class AuthPageBaseComponent implements OnInit {
           Validators.required,
           Validators.minLength(6)
         ])
-      )
+      ),
+      firstname: new FormControl(
+        '',
+        Validators.compose((!this.loginBtn)
+          ? [
+            Validators.required,
+            Validators.minLength(6)
+          ]
+          : []
+        )
+      ),
+      lastname: new FormControl(
+        '',
+        Validators.compose((!this.loginBtn)
+          ? [
+            Validators.required,
+            Validators.minLength(6)
+          ]
+          : []
+        )
+      ),
     });
   }
 

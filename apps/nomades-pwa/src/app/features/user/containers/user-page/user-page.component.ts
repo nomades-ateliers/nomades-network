@@ -4,6 +4,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { IAuth, IUser } from '@nomades-network/api-interfaces';
 // app
 import { UserService } from '../../services/user/user.service';
+import { CurrentUserStoreService } from '@nomades-network/ngrx/lib/currentUser/currentUser-store.service';
+import { first, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'nomades-network-user-page',
@@ -17,11 +20,38 @@ export class UserPageComponent implements OnInit {
   public userDataForm: FormGroup;
   public appearanceForm: FormGroup;
   public configForm: FormGroup;
-  public user: Partial<IUser & IAuth & {tz?: string}>;
+  public user$: Observable<Partial<IUser & IAuth & {tz?: string}>>;
   public readonly tz: string = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  public sectionsEditable = [
+    {
+      key: 'desc',
+      value: false,
+      title: 'Description'
+    },
+    {
+      key: 'job',
+      value: false,
+      title: 'Métier | Profession:'
+    },
+    {
+      key: 'skills',
+      value: false,
+      title: 'Compétences:'
+    },
+    {
+      key: 'contact',
+      value: false,
+      title: 'Contact:'
+    },
+    {
+      key: 'trainings',
+      value: false,
+      title: 'Formation (Nomades):'
+    }
+  ];
 
   constructor(
-    private readonly _userService: UserService
+    private _userStoreService: CurrentUserStoreService
   ) { }
 
   async ngOnInit() {
@@ -63,12 +93,16 @@ export class UserPageComponent implements OnInit {
   }
 
   async loadUserData() {
-    const user = await this._userService.getCurrentUser();
-    if (!user || !user._id)
-      return;
-    this.authForm.patchValue(user);
-    this.userDataForm.patchValue(user);
-    this.user = user;
+    // const user = await this._userService.getCurrentUser();
+    this.user$ = this._userStoreService.getCurrentUser().pipe(
+      tap(user => {
+        if (!user || !user._id)
+          return;
+        this.authForm.patchValue(user);
+        this.userDataForm.patchValue(user);
+      })
+    );
+
     
   }
 
@@ -88,21 +122,24 @@ export class UserPageComponent implements OnInit {
     alert('not implemented')
   }
 
+  modify(controlName: string) {
+    this.sectionsEditable[controlName] = !this.sectionsEditable[controlName];
+  }
+
   async save(userData: Partial<IUser>){
     if (!userData) {
       console.log('err:', userData);
       return;
     } 
-    // console.log('to save-> ',cleanObject({...userData, _id: this.user._id}));
-    const { user = null} = await this._userService.updateUser({...userData, _id: this.user._id}).catch(err => err);
-    // console.log('response update:', user);
-    if (!user) return;
-    this.user = {...this.user, ...user};
-    // patch all value
-    this.authForm.markAsPristine();
-    this.authForm.patchValue(user, { emitEvent: false });
-    this.userDataForm.markAsPristine();
-    this.userDataForm.patchValue(user, { emitEvent: false });
+    console.log('to save-> ', {...userData});
+    // const { user = null} = await this._userService.updateUser({...userData, _id: this.user._id}).catch(err => err);
+    // if (!user) return;
+    // this.user = {...this.user, ...user};
+    // // patch all value
+    // this.authForm.markAsPristine();
+    // this.authForm.patchValue(user, { emitEvent: false });
+    // this.userDataForm.markAsPristine();
+    // this.userDataForm.patchValue(user, { emitEvent: false });
   }
 
 }

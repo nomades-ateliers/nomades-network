@@ -23,9 +23,21 @@
             "aot": false,
             "assets": [
               "apps/nomades-pwa/src/favicon.ico",
-              "apps/nomades-pwa/src/assets"
+              "apps/nomades-pwa/src/assets",
+              {
+                "glob": "**/*.svg",
+                "input": "node_modules/ionicons/dist/ionicons/svg",
+                "output": "./svg"
+              }
             ],
-            "styles": ["apps/nomades-pwa/src/styles.scss"],
+            "styles": [
+              {
+                "input": "apps/nomades-pwa/src/theme/variables.scss"
+              },
+              {
+                "input": "apps/nomades-pwa/src/styles.scss"
+              }
+            ],
             "scripts": []
           },
           "configurations": {

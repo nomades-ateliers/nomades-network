@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-
+import { IonicModule } from '@ionic/angular';
 // libs
 import { UiModule } from '@nomades-network/ui';
 import { AuthStoreModule } from '@nomades-network/ngrx/lib/auth/auth-store.module';
@@ -22,6 +22,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     AuthService
   ],
   imports: [
+    IonicModule,
     UiModule,
     ReactiveFormsModule,
     CurrentUserStoreModule,

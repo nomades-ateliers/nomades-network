@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-
-import { AppComponent } from './app.component';
-import { NgrxModule } from '@nomades-network/ngrx/index';
-import { AppRoutingModule } from './app-routing.module';
+import { IonicModule } from '@ionic/angular';
 // libs
+import { NgrxModule } from '@nomades-network/ngrx/index';
 import { AuthGuard } from '@nomades-network/core/guards/auth/auth.guard';
 import { NoAuthGuard } from '@nomades-network/core/guards/no-auth/no-auth.guard';
 // app
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
 import { CoreModule } from './core/core.module';
 
 const GUARDS = [
@@ -19,6 +19,7 @@ const GUARDS = [
   imports: [
     CoreModule,
     NgrxModule,
+    IonicModule.forRoot({mode: 'md'}),
     AppRoutingModule,
   ],
   providers: [
