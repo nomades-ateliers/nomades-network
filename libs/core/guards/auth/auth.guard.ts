@@ -24,14 +24,13 @@ export class AuthGuard implements CanActivate {
     return this.store
       .pipe(
         select(state => state),
-        // map((state) =>
-        //   (state.currentUser)
-        //     ? state
-        //     : Object.assign({}, state, {loading: false})
-        // ),
-        // filter((state) => state.loading === false ),
+        map((state) =>
+          (state.currentUser)
+            ? state
+            : Object.assign({}, state, {loading: false})
+        ),
+        filter((state) => state.loading === false ),
         map((state) => {
-          // console.warn('[AuthGuard] user is auth', queryParams);
           if (state.auth) {
             return true;
           }

@@ -18,13 +18,7 @@ export class NoAuthGuard implements CanActivate {
     return this.store
       .pipe(
         select(state => state),
-        tap(state => console.log(state)),
-        // map((state) =>
-        //   (state.currentUser)
-        //     ? state
-        //     : Object.assign({}, state, {loading: false})
-        // ),
-        // filter((state) => state.loading === false ),
+        filter((state) => state.loading === false ),
         map((state) => {
           
           if (!state.auth) {
