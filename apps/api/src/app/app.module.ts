@@ -17,6 +17,10 @@ const PROTECTED_ROUTES: RouteInfo[] = [
   {
     path: '/users/:id',
     method: RequestMethod.PUT
+  },
+  {
+    path: '/users/:id',
+    method: RequestMethod.GET
   }
 ]
 @Module({

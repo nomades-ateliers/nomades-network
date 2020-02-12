@@ -1,4 +1,4 @@
-import { Controller, Get, Post, BadRequestException, Req, Body, UnauthorizedException, Put } from '@nestjs/common';
+import { Controller, Get, Post, BadRequestException, Req, Body, UnauthorizedException, Put, Param, HttpException } from '@nestjs/common';
 import { Request } from 'express';
 
 // libs
@@ -24,7 +24,21 @@ export class UsersController {
     // handle error
     if (!user || !user.uid) throw new UnauthorizedException();
     // return response
-    return this.userService.getByUID(user.uid);
+    return this.userService.getCurrentUser(user.uid);
+  }
+
+  @Get(':id')
+  async getById(
+    @Req() req: Request,
+    @Param('id') id: string,
+  ): Promise<APIResponse> {
+    // check token
+    const user = (req as any).decoded;
+    // handle error
+    if (!user || !user.uid) throw new UnauthorizedException();
+    if (!id) throw new HttpException('No user id in request', 404);
+    // return response    
+    return this.userService.getUserById(id);
   }
 
   @Post('login')

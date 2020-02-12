@@ -104,11 +104,31 @@ export class UsersService {
     return {statusCode: 200, currentUser, token};
   }
 
-  async getByUID(uid: string): Promise<APIResponse> {
-    const currentUser = await this.userModel.findOne({uid}).catch(err => err);
-    if (!currentUser) 
+  async getCurrentUser(uid: string): Promise<APIResponse>  {
+    // return {currentUser: null, statusCode: 200}
+    const currentUser = await this._getByUID(uid) //.catch(err => err);
+    return {statusCode: 200, currentUser} 
+  }
+
+  async getUserById(id: string): Promise<APIResponse>  {
+    const user = await this._getByID(id).catch(err => err);
+    if (!user || user instanceof Error)
       throw new NotFoundException();
-    return {statusCode: 200, currentUser};
+    return {statusCode: 200, users: [user]} 
+  }
+
+  private async _getByID(_id: string): Promise<IUser> {
+    const user = await this.userModel.findOne({_id}).then(res => res.toObject()).catch(err => err);
+    if (!user) 
+      throw new NotFoundException();
+    return user
+  } 
+
+  private async  _getByUID(uid: string): Promise<IUser> {
+    const user = await this.userModel.findOne({uid}).then(res => res.toObject()).catch(err => err);
+    if (!user) 
+      throw new NotFoundException();
+    return user
   } 
 
   async update(data: Partial<IUser>, requestUID: string): Promise<APIResponse> {
