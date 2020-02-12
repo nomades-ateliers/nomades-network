@@ -32,7 +32,8 @@ export class UserPageComponent implements OnInit {
   public sectionsEditable = getSectionsEditable({
     // injected action for trainings edit btn click 
     trainings: (indexSection: string) => {
-      this.sectionsEditable[indexSection].value = !this.sectionsEditable[indexSection].value;
+      this.toogleEditState(+indexSection);
+      // this.sectionsEditable[indexSection].value = !this.sectionsEditable[indexSection].value;
       if (this.trainings$) return;
       // request to load trainings list
       this.trainings$ = this._userService.getTtrainingsList().pipe(
@@ -42,7 +43,8 @@ export class UserPageComponent implements OnInit {
     // injected action for skills edit btn click 
     skills: (indexSection: string) => {
       // TODO: load existing skills as list
-      this.sectionsEditable[indexSection].value = !this.sectionsEditable[indexSection].value;
+      this.toogleEditState(+indexSection);
+      // this.sectionsEditable[indexSection].value = !this.sectionsEditable[indexSection].value;
     }
   });
 
@@ -180,8 +182,13 @@ export class UserPageComponent implements OnInit {
     this.save(this.userDataForm.value);
   }
   
-  modify(controlName: string) {
-    this.sectionsEditable[controlName] = !this.sectionsEditable[controlName];
+  toogleEditState(sectionIndex: number) {
+    this.sectionsEditable = this.sectionsEditable.map((section, index) => {
+      section.value = false;
+      if ((index === sectionIndex) && !section.value)
+        section.value = true
+      return section;
+    })
   }
 
   async save(userData: Partial<IUser>){
