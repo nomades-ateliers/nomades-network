@@ -16,7 +16,7 @@ import { Observable } from 'rxjs';
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <h1>Default Main Page</h1>
+      <h1>Communauté Page</h1>
     </ion-content>
   `,
   styles: [``]

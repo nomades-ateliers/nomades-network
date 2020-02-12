@@ -45,7 +45,7 @@
           <ion-icon
               [name]="(!sectionsEditable[index].value) ? 'create' : 'close'"
               size="small"
-              color="primary"
+              [color]="(sectionsEditable[index].value) ? 'primary' : 'light-dark'"
               class="ion-float-right descIconEdit"
               (click)="toogleEditState(index)"></ion-icon>
           <!-- [Display] -->
@@ -71,6 +71,7 @@
               <ion-icon 
                 [name]="(!sectionsEditable[index].value) ? 'create' : 'close'"
                 size="small"
+                [color]="(sectionsEditable[index].value) ? 'primary' : 'light-dark'"
                 class="ion-float-right"
                 (click)="(section?.action)
                   ? section?.action(index)

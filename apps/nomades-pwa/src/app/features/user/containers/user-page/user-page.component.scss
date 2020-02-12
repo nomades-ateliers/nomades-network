@@ -5,7 +5,8 @@ nomades-network-user-page {
   }
   h2 {
     line-height: 3rem;
-    border-bottom: solid 1px var(--ion-color-dark);
+    font-weight: 400;
+    border-bottom: solid 1px var(--ion-color-light-dark);
   }
 
   // icon slot start alignement with item multiline
