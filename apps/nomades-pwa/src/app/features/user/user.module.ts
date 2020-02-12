@@ -9,6 +9,7 @@ import { UiModule } from '@nomades-network/ui';
 import { UserRoutingModule } from './user-routing.module';
 import { UserPageComponent } from './containers/user-page/user-page.component';
 import { COMPONENTS, ENTRY_COMPONENTS } from './components';
+import { CurrentUserPageComponent } from './containers/current-user/current-user.page';
 
 @NgModule({
   entryComponents: [
@@ -16,6 +17,7 @@ import { COMPONENTS, ENTRY_COMPONENTS } from './components';
   ],
   declarations: [
     UserPageComponent,
+    CurrentUserPageComponent,
     ...COMPONENTS
   ],
   imports: [

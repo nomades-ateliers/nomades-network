@@ -1,0 +1,49 @@
+nomades-network-current-user-page {
+
+  ion-avatar {
+    margin: auto
+  }
+  h2 {
+    line-height: 3rem;
+    font-weight: 400;
+    border-bottom: solid 1px var(--ion-color-light-dark);
+  }
+
+  // icon slot start alignement with item multiline
+  .icon_align {
+    margin-top: 1.5rem;
+  }
+  ion-icon.ion-float-right {
+    margin-top: 0.8rem;
+  }
+  .descIconEdit {
+    margin-top: 0;
+  }
+  .descContentText {
+    max-width: 92%;
+    display: block;
+  }
+  ion-card {
+    cursor: auto !important;
+  }
+  ion-item-divider {
+    border: none;
+
+    > ion-icon, ion-label {
+      color: #757575;
+    }
+  }
+  ion-input {
+    ::placeholder {
+      font-style: italic;
+      font-size: 80%;      
+    }
+  }
+  ion-label.label-stacked {
+    margin-bottom: 0.5rem !important;
+  }
+  ion-note.change_pwd {
+    margin-top: -0.5rem;
+    text-decoration: none;
+  }
+}
