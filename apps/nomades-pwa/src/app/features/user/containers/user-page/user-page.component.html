@@ -8,53 +8,218 @@
   <!-- <pre *ngIf="user$|async as user" >
     {{user|json}}
   </pre> -->
-  <ion-grid *ngIf="user$|async as user" class="ion-padding-top">
+  
+
+    <ion-grid *ngIf="user$|async as user" class="ion-padding-top">
     
-    <ion-row class="ion-padding-top ion-margin-bottom">
-      <ion-col>
-        <ion-item lines="none">
-          <ion-avatar slot="start">
-            <ion-img [src]="user | gavatar | async"></ion-img>
-          </ion-avatar>
-          <ion-label *ngIf="user?.firstname || user?.lastname">
-            <p>{{user?.firstname}} {{user?.lastname}} </p>
-            <p>{{user?.job}}</p>
-          </ion-label>
-          <ion-label *ngIf="!user?.firstname && !user?.lastname">
-            {{user?.email}}
-          </ion-label> 
-        </ion-item>
-      </ion-col>
-    </ion-row>
+      <ion-row class="ion-padding-top ion-margin-bottom">
+        <ion-col>
+          <ion-item lines="none">
+            <ion-avatar slot="start">
+              <ion-img [src]="user | gavatar | async"></ion-img>
+            </ion-avatar>
+            <ion-label *ngIf="user?.firstname || user?.lastname">
+              <p>{{user?.firstname}} {{user?.lastname}} </p>
+              <div *ngIf="user?.job && user?.job?.length > 0" [innerHTML]="user?.job"></div>
+            </ion-label>
+            <ion-label *ngIf="!user?.firstname && !user?.lastname">
+              {{user?.email}}
+            </ion-label> 
+          </ion-item>
+        </ion-col>
+      </ion-row>
+  
+      <!-- loop for each section editable -->
+      <ion-row
+          *ngFor="let section of sectionsEditable; let index = index"
+          class="ion-padding-horizontal">
+        <!-- only desc section -->
+        <ion-col *ngIf="section?.key === 'desc'">
+          <ion-icon (click)="sectionsEditable[index].value = !sectionsEditable[index].value" size="small" color="primary" class="ion-float-right" name="create"></ion-icon>
+          <ion-text *ngIf="!sectionsEditable[index].value">
+            <div [innerHTML]="user?.desc"></div>
+          </ion-text>  
+          <form [formGroup]="userDataForm" class="ion-padding-bottom" *ngIf="sectionsEditable[index].value">
+            <quill-editor [formControlName]="section.key"></quill-editor>
+            <ion-button
+                [disabled]="userDataForm.pristine" 
+                (click)="save(userDataForm.value)">Enregistrer</ion-button>
+          </form>
+        </ion-col>
+        <ion-col *ngIf="section?.key !== 'desc'">
+          <ion-text color="primary">
+            <h2>
+              {{section?.title}}
+              <ion-icon (click)="(section?.action) ? section.action(index) : sectionsEditable[index].value = !sectionsEditable[index].value" size="small" class="ion-float-right" name="create"></ion-icon>
+            </h2>
+          </ion-text>
+          <!-- If is string -->
+          <div *ngIf="section.isString">
+            <!-- [Display] -->
+            <ion-text *ngIf="!sectionsEditable[index].value">
+            <div [innerHTML]="user[section?.key]"></div>
+            </ion-text>
+            <!-- [Editable] -->
+            <form [formGroup]="userDataForm" *ngIf="sectionsEditable[index].value" class="ion-padding-bottom">
+              <quill-editor [formControlName]="section.key"></quill-editor>
+              <ion-button
+                  [disabled]="userDataForm.pristine" 
+                  (click)="save(userDataForm.value)">Enregistrer</ion-button>   
+            </form>
+          </div>
+          <!-- If is array data Skill-->
+          <div *ngIf="section?.isArray && section?.key === 'skills'">
+            <!-- [Display] -->
+            <div *ngIf="!sectionsEditable[index].value">
+              {{user[section?.key] | json}}
+            </div>
+            <!-- [Editable] -->
+            <form [formGroup]="userDataForm" *ngIf="sectionsEditable[index].value" [formArrayName]="section.key">
+              <ion-chip *ngFor="let skill of user?.skills; let cIndex = index">
+                <ion-label>{{skill?.name}}</ion-label>
+                <ion-icon name="close-circle"></ion-icon>
+              </ion-chip>
+              <ion-item>
+                <ion-input type="text" ></ion-input>
+                <ion-button slot="end">
+                  <ion-icon name="add"></ion-icon>
+                </ion-button>
+              </ion-item>
+            </form>
+          </div>
+          <!-- If is object data Contact -->
+          <div *ngIf="section?.key === 'contact'">
+            <!-- [Display] -->
+            <div *ngIf="!sectionsEditable[index].value" lines="none">
+              <ion-text *ngIf="user?.firstname || user?.lastname">{{user?.firstname}} {{user?.lastname}}</ion-text>
+              <ion-text *ngIf="user?.contact?.street">
+                {{user?.contact?.street}}<br/>
+                {{user?.contact?.zipCode}} {{user?.contact?.city}}<br/>
+                {{user?.contact?.country}}<br/>
+              </ion-text>
+            </div>
+            <!-- [Editable] -->
+            <form [formGroup]="userDataForm" *ngIf="sectionsEditable[index].value">
+              <ion-list>
+                <ion-item>
+                  <ion-label>Nom</ion-label>
+                  <ion-input formControlName="lastname" type="text"></ion-input>
+                </ion-item>
+                <ion-item> 
+                  <ion-label>Prénom</ion-label>
+                  <ion-input formControlName="firstname" type="text"></ion-input>
+                </ion-item>
+              </ion-list>
 
-    <!-- loop for each section editable -->
-    <ion-row
-        *ngFor="let section of sectionsEditable; let index = index"
-        class="ion-padding-horizontal">
-      <ion-col *ngIf="section?.key === 'desc'">
-        <ion-icon (click)="sectionsEditable[index].value = !sectionsEditable[index].value" size="small" color="primary" class="ion-float-right" name="create"></ion-icon>
-        <ion-text *ngIf="!sectionsEditable[index]">
-          {{user?.desc }}
-        </ion-text>
-        <div contenteditable="true" *ngIf="sectionsEditable[index].value">
-          {{user[section?.key]}}
-        </div>
-      </ion-col>
-      <ion-col *ngIf="section?.key !== 'desc'">
-        <ion-text color="primary">
-          <h2>
-            {{section?.title}}
-            <ion-icon (click)="sectionsEditable[index].value = !sectionsEditable[index].value" size="small" class="ion-float-right" name="create"></ion-icon>
-          </h2>
-        </ion-text>
-        <ion-text *ngIf="!sectionsEditable[index]">
-          {{user[section?.key]}}
-        </ion-text>
-        <div contenteditable="true" *ngIf="sectionsEditable[index].value">
-          {{user[section?.key]}}
-        </div>
-      </ion-col>
-    </ion-row>
+              <ion-list [formGroupName]="section.key">
+                <ion-item>
+                  <ion-label>Street</ion-label>
+                  <ion-input formGroupName="street" type="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label>NPA</ion-label>
+                  <ion-input formGroupName="zipCode" type="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label>Ville</ion-label>
+                  <ion-input formGroupName="city" type="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label>Pays</ion-label>
+                  <ion-input formGroupName="country" type="text"></ion-input>
+                </ion-item>
+              </ion-list>
+              <ion-button
+                [disabled]="userDataForm.pristine" 
+                (click)="save(userDataForm.value)">Enregistrer</ion-button> 
+            </form>
+          </div>
+          <!-- if is data Trainings -->
+          <div *ngIf="section?.key === 'trainings'">
+            <!-- [Display] -->
+            <ion-list *ngIf="!sectionsEditable[index].value">
+              <ion-item
+                lines="none"
+                *ngFor="let training of userDataForm.get(sectionsEditable[index].key)['controls']; let tIndex = index">
+                <ion-ion-text class="ion-text-wrap">
+                  <h3>{{training?.value?.name}}</h3>
+                  <p>{{training?.value?.cerfifiedState}}</p>
+                  <a [href]="training?.value?.certifiedProjectUrl">{{training?.value?.certifiedProject}}</a>
+                </ion-ion-text>
+              </ion-item>
+            </ion-list>
+            <!-- [Editable] -->
+            <!-- add item with save btn -->
+            <form [formGroup]="trainingForm">
+              <ion-list lines="none" *ngIf="sectionsEditable[index].value">
+                <ion-item lines="none">
+                  <ion-label>Formation: </ion-label>
+                  <ion-select *ngIf="(trainings$|async) as trainings" formControlName="name">
+                    <ion-select-option [value]="training?._id" *ngFor="let training of trainings">
+                      {{training?.name}}
+                    </ion-select-option>
+                  </ion-select>                  
+                </ion-item>
 
-  </ion-grid>
+                <ion-item>
+                  <ion-label>
+                    Certification: 
+                  </ion-label>
+                  <ion-select *ngIf="(trainings$|async) as trainings" formControlName="cerfifiedState">
+                    <ion-select-option>
+                      Non Certifié
+                    </ion-select-option>
+                    <ion-select-option>
+                      Certifié
+                    </ion-select-option>
+                    <ion-select-option>
+                      Certifié mention bien
+                    </ion-select-option>
+                    <ion-select-option>
+                      Certifié mention très bien
+                    </ion-select-option>
+                  </ion-select> 
+                </ion-item>
+                
+                <ion-item>
+                  <ion-label>
+                    Nom du projet:
+                  </ion-label>
+                  <ion-input formControlName="certifiedProject" type="text" ></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label>
+                    Adresse web du projet:
+                  </ion-label>
+                  <ion-input formControlName="certifiedProjectUrl" type="url" ></ion-input>
+                </ion-item>
+                <ion-button
+                    size="small"
+                    (click)="addTraining()"
+                    [disabled]="trainingForm?.pristine || !trainingForm?.valid"
+                    [fill]="(trainingForm?.valid) ? 'solid' : 'outline'">
+                  ajouter</ion-button>
+              
+              </ion-list>
+              <!-- liste deletable -->
+              <ion-list *ngIf="sectionsEditable[index].value">
+                <ion-item
+                  lines="none"
+                  *ngFor="let training of userDataForm.get(sectionsEditable[index].key)['controls']; let tIndex = index">
+                  <ion-ion-text class="ion-text-wrap">
+                    <h3>{{training?.value?.name}}</h3>
+                    <p>{{training?.value?.cerfifiedState}}</p>
+                    <a [href]="training?.value?.certifiedProjectUrl">{{training?.value?.certifiedProject}}</a>
+                  </ion-ion-text>
+                  <ion-icon slot="end" name="close"></ion-icon>
+                </ion-item>
+              </ion-list>
+            </form>
+            
+          </div>
+        </ion-col>
+      </ion-row>
+  
+    </ion-grid>
+  
 </ion-content>

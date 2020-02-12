@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { ModalController } from '@ionic/angular';
 // libs
 import { IAuth, IUser } from '@nomades-network/api-interfaces';
-// app
-import { UserService } from '../../services/user/user.service';
+import { UserService } from '@nomades-network/core/services';
 import { CurrentUserStoreService } from '@nomades-network/ngrx/lib/currentUser/currentUser-store.service';
-import { first, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+
 
 @Component({
   selector: 'nomades-network-user-page',
@@ -20,23 +21,28 @@ export class UserPageComponent implements OnInit {
   public userDataForm: FormGroup;
   public appearanceForm: FormGroup;
   public configForm: FormGroup;
+  public trainingForm: FormGroup;
   public user$: Observable<Partial<IUser & IAuth & {tz?: string}>>;
+  public trainings$: Observable<{_id?: string; name?: string}[]>;
   public readonly tz: string = Intl.DateTimeFormat().resolvedOptions().timeZone;
   public sectionsEditable = [
     {
       key: 'desc',
       value: false,
-      title: 'Description'
+      title: 'Description',
+      isString: true
     },
     {
       key: 'job',
       value: false,
-      title: 'Métier | Profession:'
+      title: 'Métier | Profession:',
+      isString: true
     },
     {
       key: 'skills',
       value: false,
-      title: 'Compétences:'
+      title: 'Compétences:',
+      isArray: true
     },
     {
       key: 'contact',
@@ -46,15 +52,33 @@ export class UserPageComponent implements OnInit {
     {
       key: 'trainings',
       value: false,
-      title: 'Formation (Nomades):'
+      title: 'Formation (Nomades):',
+      isArray: true,
+      action: (index) => {
+        this.sectionsEditable[index].value = !this.sectionsEditable[index].value;
+        // if (this.sectionsEditable[index].value) this.addTraining();
+        if (this.trainings$) return;
+        console.log('load...');
+        this.trainings$ = this._userService.getTtrainingsList().pipe(
+          tap(res => console.log(res))
+        )
+      }
     }
   ];
 
   constructor(
-    private _userStoreService: CurrentUserStoreService
+    private _userStoreService: CurrentUserStoreService,
+    private _userService: UserService,
+    private _modalCtrl: ModalController
   ) { }
 
   async ngOnInit() {
+    this.trainingForm = new FormGroup({
+      name: new FormControl('', Validators.compose([Validators.required])),
+      cerfifiedState: new FormControl('', Validators.compose([Validators.required])),
+      certifiedProject: new FormControl('', Validators.compose([Validators.required])),
+      certifiedProjectUrl: new FormControl('', Validators.compose([]))
+    });
     this.authForm = new FormGroup({
       _id: new FormControl('', Validators.compose([
         Validators.required,
@@ -71,13 +95,11 @@ export class UserPageComponent implements OnInit {
     // user data
     this.userDataForm = new FormGroup({
       // default
-      _id: new FormControl('', Validators.compose([
-        Validators.required,
-      ])),
+      _id: new FormControl(''),
       // optional
       firstname: new FormControl('', Validators.compose([])),
       lastname: new FormControl('', Validators.compose([])),
-      address: new FormGroup({
+      contact: new FormGroup({
         street: new FormControl(null),
         street2: new FormControl(null),
         street_number: new FormControl(null),
@@ -88,6 +110,15 @@ export class UserPageComponent implements OnInit {
         countryCode: new FormControl(null),
         default: new FormControl(null), 
       }),
+      desc: new FormControl('', Validators.compose([])),
+      job: new FormControl('', Validators.compose([])),
+      skills: new FormArray([
+        // new FormGroup({
+        //   name: new FormControl('', Validators.compose([])),
+        // })
+      ]),
+      trainings: new FormArray([]),
+
     });
     await this.loadUserData();
   }
@@ -100,27 +131,54 @@ export class UserPageComponent implements OnInit {
           return;
         this.authForm.patchValue(user);
         this.userDataForm.patchValue(user);
+        // set trainings value
+        // reset control
+        if (user.trainings) this.userDataForm.get('trainings')['controls'] = [];
+        // add existing training
+        if (user.trainings) user.trainings.map(t => {
+          const group = new FormGroup({
+            name: new FormControl(t.name, Validators.compose([Validators.required])),
+            cerfifiedState: new FormControl(t.cerfifiedState, Validators.compose([Validators.required])),
+            certifiedProject: new FormControl(t.certifiedProject, Validators.compose([Validators.required])),
+            certifiedProjectUrl: new FormControl(t.certifiedProjectUrl, Validators.compose([]))
+          });
+          // patch value
+          (this.userDataForm.get('trainings') as FormArray).push(group)
+        })
+        console.log('from value: ', this.userDataForm.value);
+        
       })
     );
-
-    
   }
 
-  async changeData($event: CustomEvent, type: string) {
-    $event.preventDefault();
-    console.log('---');
-    switch (true) {
-      case type === 'pwd':     
-        break;
-      case type === 'tz':     
-        break;
-      case type === 'langue':
-        break;
-      default:
-        break;
-    }
-    alert('not implemented')
+  addTraining() {
+    const group = new FormGroup({
+      name: new FormControl(this.trainingForm.value.name, Validators.compose([Validators.required])),
+      cerfifiedState: new FormControl(this.trainingForm.value.cerfifiedState, Validators.compose([Validators.required])),
+      certifiedProject: new FormControl(this.trainingForm.value.certifiedProject, Validators.compose([Validators.required])),
+      certifiedProjectUrl: new FormControl(this.trainingForm.value.certifiedProjectUrl, Validators.compose([]))
+    });
+    (this.userDataForm.get('trainings') as FormArray).push(group);
+    this.trainingForm.reset();
+    this.sectionsEditable.find(s => s.key === 'trainings').value = false;
+    this.save(this.userDataForm.value);
   }
+
+  // async editTrainings () {
+  //   // get user data from store
+  //   const user = await this.user$.pipe(first()).toPromise().catch(err => err);
+  //   // create modal and pass component & componentProps
+  //   const ionModal = await this._modalCtrl.create({
+  //     component: TrainingFormComponent,
+  //     componentProps: {user}
+  //   });
+  //   // display modal
+  //   await ionModal.present();
+  //   // wait on close to handle updated data
+  //   const {data = null, ...error} = await ionModal.onDidDismiss().then(res => res).catch(err => err);
+  //   // send value to backend with store action
+  //   console.log('dataUpdated from modal: ', data, error);
+  // }
 
   modify(controlName: string) {
     this.sectionsEditable[controlName] = !this.sectionsEditable[controlName];
@@ -132,14 +190,11 @@ export class UserPageComponent implements OnInit {
       return;
     } 
     console.log('to save-> ', {...userData});
-    // const { user = null} = await this._userService.updateUser({...userData, _id: this.user._id}).catch(err => err);
-    // if (!user) return;
-    // this.user = {...this.user, ...user};
-    // // patch all value
+    this._userStoreService.dispatchUpdateAction({...userData, _id: this.userDataForm.value._id})
     // this.authForm.markAsPristine();
-    // this.authForm.patchValue(user, { emitEvent: false });
-    // this.userDataForm.markAsPristine();
-    // this.userDataForm.patchValue(user, { emitEvent: false });
+    // this.authForm.patchValue(userData, { emitEvent: false });
+    this.userDataForm.markAsPristine();
+    this.userDataForm.patchValue(userData, { emitEvent: false });
   }
 
 }
