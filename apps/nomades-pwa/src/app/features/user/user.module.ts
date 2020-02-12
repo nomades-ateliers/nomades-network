@@ -1,26 +1,46 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { QuillModule } from 'ngx-quill';
 // libs
-import { SharedPipeModule } from '@nomades-network/core/pipes'
+import { SharedPipeModule } from '@nomades-network/core/pipes';
+import { UiModule } from '@nomades-network/ui';
 // app
 import { UserRoutingModule } from './user-routing.module';
 import { UserPageComponent } from './containers/user-page/user-page.component';
-import { UserService } from './services/user/user.service';
-import { UiModule } from '@nomades-network/ui';
+import { COMPONENTS, ENTRY_COMPONENTS } from './components';
 
 @NgModule({
-  declarations: [UserPageComponent],
+  entryComponents: [
+    ...ENTRY_COMPONENTS
+  ],
+  declarations: [
+    UserPageComponent,
+    ...COMPONENTS
+  ],
   imports: [
     IonicModule,
     UiModule,
     UserRoutingModule,
     ReactiveFormsModule,
-    SharedPipeModule
+    SharedPipeModule,
+    QuillModule.forRoot({
+      modules: {
+        toolbar: [
+          // [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+          [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+          ['bold', 'italic'],
+          [{ 'align': [] }],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+          // [{ 'font': [] }],
+        ],
+        // syntax: true
+      },
+      theme: 'snow',
+      placeholder: 'Vous pouvez ajouter des commentaires ici ...',
+    })
   ],
-  providers: [
-    UserService
-  ],
+  providers: [],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ]
