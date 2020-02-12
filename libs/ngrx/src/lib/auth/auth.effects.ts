@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 
 import { Router, ActivatedRoute } from '@angular/router';
-import { Store, ActionType, select, Action } from '@ngrx/store';
+import { Store, select, Action } from '@ngrx/store';
+import { switchMap, catchError, tap, withLatestFrom } from 'rxjs/operators';
+import { of, concat } from 'rxjs';
+// libs
+import { AuthService } from '@nomades-network/core/services';
+// app
 import { IAuthState } from './auth.reducer';
 import * as Auth from './auth.actions';
 import * as CurrentUser from '../currentUser/currentUser.actions';
-import { switchMap, catchError, exhaustMap, map, tap, withLatestFrom } from 'rxjs/operators';
-// features
-import { AuthService } from '@nomades-network/features/auth/services/auth.service';
-import { of, concat } from 'rxjs';
 import { ICurrentUserState } from '../currentUser/currentUser.reducer';
 
 @Injectable()
