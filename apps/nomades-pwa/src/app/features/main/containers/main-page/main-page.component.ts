@@ -22,8 +22,8 @@ import { IUser } from '@nomades-network/api-interfaces';
             <ion-card-content>
               <ion-text *ngIf="user?.firstname || user?.lastname; else noData">
                 <p>{{user?.firstname}} {{user?.lastname}} </p>
-                <p>{{user?.job}}</p>
               </ion-text>
+              <div *ngIf="user?.job" [innerHTML]="user?.job"></div>
               <ng-template #noData>
                 <ion-text >
                   <p>{{user?.email}} </p>
