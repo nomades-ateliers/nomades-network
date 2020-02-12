@@ -6,7 +6,9 @@ import { map, catchError, tap } from 'rxjs/operators';
 import { APIResponse } from '@nomades-network/api-interfaces';
 import { environment } from '@nomades-network/core/environements/environment';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
   private readonly _isAuthUrl: string =   '/api/users/isauth';
   private readonly _loginUrl: string =    '/api/users/login';
