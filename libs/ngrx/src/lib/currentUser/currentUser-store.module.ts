@@ -5,10 +5,13 @@ import { throwIfAlreadyLoaded } from '@nomades-network/utils';
 
 import * as fromCurrentUser from './currentUser.reducer';
 import { CurrentUserStoreService } from './currentUser-store.service';
+import { EffectsModule } from '@ngrx/effects';
+import { CurrentUserEffects } from './currentUser.effects';
 
 @NgModule({
   imports: [
-    StoreModule.forFeature('currentUser', fromCurrentUser.reducer)
+    StoreModule.forFeature('currentUser', fromCurrentUser.reducer),
+    EffectsModule.forFeature([CurrentUserEffects])
   ],
   exports: [StoreModule],
   providers: [CurrentUserStoreService]

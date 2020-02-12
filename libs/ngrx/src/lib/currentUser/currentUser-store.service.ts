@@ -22,10 +22,13 @@ export class CurrentUserStoreService extends NgRxStoreService {
     this.dispatchAction(new currentuser.LogoutAction());
   }
 
+  dispatchUpdateAction(record:  Partial<IUser>): void {
+    this.dispatchAction(new currentuser.UpdateCurrentUserAction(record));
+  }
+
   // prevent error implementation of unused methodes
   dispatchCreateAction(record:  Partial<IUser>): void {}
   dispatchLoadAction(params: { path: string }): void {}
-  dispatchUpdateAction(record:  Partial<IUser>): void {}
   dispatchRemoveAction(id: string | number): void {}
 
   getCurrentUser(): Observable<ICurrentUserState> {
