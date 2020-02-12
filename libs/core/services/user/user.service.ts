@@ -40,6 +40,15 @@ export class UserService {
       );
   }
 
+  getUserById(id: string): Observable<IUser> {
+    return this._http.get<APIResponse>('/api/users/' + id).pipe(
+      map(response => (response.users)
+        ? response.users.find(u => u._id === id)
+        : null
+      )
+    )
+  }
+
   getTtrainingsList() {
     return this._trainingService.get();
   }
