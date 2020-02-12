@@ -183,12 +183,11 @@ export class UserPageComponent implements OnInit {
   }
   
   toogleEditState(sectionIndex: number) {
-    this.sectionsEditable = this.sectionsEditable.map((section, index) => {
-      section.value = false;
-      if ((index === sectionIndex) && !section.value)
-        section.value = true
-      return section;
-    })
+    this.sectionsEditable = this.sectionsEditable.map((section, index) => 
+      ((index === sectionIndex) && !section.value)
+        ? (section.value = true, section)
+        : (section.value = false, section)
+    )
   }
 
   async save(userData: Partial<IUser>){

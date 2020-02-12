@@ -125,7 +125,7 @@
                 <ion-ion-text class="ion-text-wrap">
                   <h3>{{training?.value?.name}}</h3>
                   <p>{{training?.value?.cerfifiedState}}</p>
-                  <a [href]="training?.value?.certifiedProjectUrl">{{training?.value?.certifiedProject}}</a>
+                  <a [href]="training?.value?.certifiedProjectUrl" [title]="training?.value?.certifiedProject">{{training?.value?.certifiedProjectUrl}}</a>
                 </ion-ion-text>
               </ion-item>
             </ion-list>
