@@ -9,13 +9,13 @@ export const getSectionsEditable = (actions: { trainings: Function; skills: Func
   {
     key: 'job',
     value: false,
-    title: 'Métier | Profession:',
+    title: 'Métier | Profession',
     isString: true
   },
   {
     key: 'skills',
     value: false,
-    title: 'Compétences:',
+    title: 'Compétences',
     isArray: true,
     action: actions.skills
   },
@@ -27,7 +27,7 @@ export const getSectionsEditable = (actions: { trainings: Function; skills: Func
   {
     key: 'trainings',
     value: false,
-    title: 'Formation (Nomades):',
+    title: 'Formation(s) Nomades',
     isArray: true,
     action: actions.trainings
   }

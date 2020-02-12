@@ -199,6 +199,7 @@ export class UserPageComponent implements OnInit {
     this._userStoreService.dispatchUpdateAction({...userData, _id: this.userDataForm.value._id})
     this.userDataForm.markAsPristine();
     this.userDataForm.patchValue(userData, { emitEvent: false });
+    this.sectionsEditable = this.sectionsEditable.map((section) => (section.value = false, section))
   }
 
 }

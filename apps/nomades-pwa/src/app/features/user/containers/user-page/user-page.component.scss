@@ -1,8 +1,26 @@
 nomades-network-user-page {
 
+  ion-avatar {
+    margin: auto
+  }
+  h2 {
+    line-height: 3rem;
+    border-bottom: solid 1px var(--ion-color-dark);
+  }
+
   // icon slot start alignement with item multiline
   .icon_align {
     margin-top: 1.5rem;
+  }
+  ion-icon.ion-float-right {
+    margin-top: 0.8rem;
+  }
+  .descIconEdit {
+    margin-top: 0;
+  }
+  .descContentText {
+    max-width: 92%;
+    display: block;
   }
   ion-card {
     cursor: auto !important;

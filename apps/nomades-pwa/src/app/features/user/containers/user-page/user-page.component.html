@@ -10,18 +10,18 @@
   </pre> -->
   
 
-    <ion-grid *ngIf="user$|async as user" class="ion-padding-top">
+    <ion-grid *ngIf="user$|async as user">
     
-      <ion-row class="ion-margin-bottom">
+      <ion-row class="ion-margin-bottom ion-padding-horizontal">
         <ion-col size="12" class="ion-text-center">
           <!-- Profil image -->
           <ion-avatar>
             <ion-img [src]="user | gavatar | async"></ion-img>
           </ion-avatar>
         </ion-col>
-        <ion-col>
+        <ion-col class="ion-margin-top">
           <!-- Display user name OR email -->
-          <ion-item lines="none">
+          <ion-text>
             <ion-label *ngIf="user?.firstname || user?.lastname">
               <p>
                 {{user?.firstname}} {{user?.lastname}}
@@ -31,7 +31,7 @@
             <ion-label *ngIf="!user?.firstname && !user?.lastname">
               {{user?.email}}
             </ion-label> 
-          </ion-item>
+          </ion-text>
         </ion-col>
       </ion-row>
   
@@ -46,10 +46,10 @@
               [name]="(!sectionsEditable[index].value) ? 'create' : 'close'"
               size="small"
               color="primary"
-              class="ion-float-right"
+              class="ion-float-right descIconEdit"
               (click)="toogleEditState(index)"></ion-icon>
           <!-- [Display] -->
-          <ion-text *ngIf="!sectionsEditable[index].value">
+          <ion-text class="descContentText" *ngIf="!sectionsEditable[index].value">
             <div [innerHTML]="user?.desc"></div>
           </ion-text>  
           <!-- [Editable] -->
