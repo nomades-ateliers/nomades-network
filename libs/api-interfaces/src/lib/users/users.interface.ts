@@ -6,6 +6,12 @@ export interface IAuth {
   password: string;
 };
 
+export interface IUserSkill {
+  _id?: string;
+  name: string;
+  level?: number
+}
+
 export interface IUser {
   _id?: string;
   uid?: string;
@@ -17,7 +23,7 @@ export interface IUser {
   avatar?: string;
   desc?: string;
   job?: string;
-  skills?: {_id?: string; name?: string}[];
+  skills?: IUserSkill[];
   contact?: IAddress;
   trainings?: (ITraining & {
     cerfifiedState?: string;

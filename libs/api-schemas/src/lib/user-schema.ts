@@ -1,6 +1,7 @@
 import { Schema, Document } from 'mongoose';
 import { IUser } from '@nomades-network/api-interfaces';
 import { userTrainingSchema } from './user-training.schema';
+import { userSkillSchema } from './user-skill.schema';
 
 export const authSchema = new Schema({
   password: {
@@ -40,5 +41,6 @@ export const userSchema = new Schema<IUser & Document>({
   },
   desc: String,
   job: String,
+  skills: [userSkillSchema],
   trainings: [userTrainingSchema]
 });

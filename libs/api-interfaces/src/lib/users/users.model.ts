@@ -1,4 +1,4 @@
-import { IUser } from './users.interface';
+import { IUser, IUserSkill } from './users.interface';
 import { ITraining } from '../training';
 import { IAddress } from '../address';
 
@@ -13,7 +13,7 @@ export class User implements IUser {
   public avatar?: string;
   public desc?: string;
   public job?: string;
-  public skills?: {_id?: string; name?: string}[];
+  public skills?: IUserSkill[];
   public contact?: IAddress;
   public trainings?: (ITraining & {
     cerfifiedState?: string;
