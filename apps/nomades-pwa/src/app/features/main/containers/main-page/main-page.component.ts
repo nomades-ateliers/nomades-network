@@ -33,24 +33,21 @@ import { IUser } from '@nomades-network/api-interfaces';
           </ion-card>
           <ion-list>
             <ion-item (click)="navTo('', menu)">
-              <ion-label>Home</ion-label>
-            </ion-item>
-            <ion-item (click)="navTo('community', menu)">
               <ion-label>Communauté</ion-label>
             </ion-item>
-            <ion-item (click)="navTo('slack', menu)">
+            <ion-item disabled="true" (click)="navTo('slack', menu)">
               <ion-label>Slack</ion-label>
             </ion-item>
-            <ion-item (click)="navTo('mandats', menu)">
+            <ion-item disabled="true" (click)="navTo('mandats', menu)">
               <ion-label>Mandats</ion-label>
             </ion-item>
-            <ion-item (click)="navTo('events', menu)">
+            <ion-item disabled="true" (click)="navTo('events', menu)">
               <ion-label>Events</ion-label>
             </ion-item>
             <ion-item (click)="navTo('user', menu)">
               <ion-label>Mon profil</ion-label>
             </ion-item>
-            <ion-item (click)="navTo('signin_pro', menu)">
+            <ion-item disabled="true" (click)="navTo('signin_pro', menu)">
               <ion-label>Devenir membre</ion-label>
             </ion-item>
           </ion-list>
