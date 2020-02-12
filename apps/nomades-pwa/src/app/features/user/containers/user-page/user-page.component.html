@@ -12,14 +12,20 @@
 
     <ion-grid *ngIf="user$|async as user" class="ion-padding-top">
     
-      <ion-row class="ion-padding-top ion-margin-bottom">
+      <ion-row class="ion-margin-bottom">
+        <ion-col size="12" class="ion-text-center">
+          <!-- Profil image -->
+          <ion-avatar>
+            <ion-img [src]="user | gavatar | async"></ion-img>
+          </ion-avatar>
+        </ion-col>
         <ion-col>
+          <!-- Display user name OR email -->
           <ion-item lines="none">
-            <ion-avatar slot="start">
-              <ion-img [src]="user | gavatar | async"></ion-img>
-            </ion-avatar>
             <ion-label *ngIf="user?.firstname || user?.lastname">
-              <p>{{user?.firstname}} {{user?.lastname}} </p>
+              <p>
+                {{user?.firstname}} {{user?.lastname}}
+              </p>
               <div *ngIf="user?.job && user?.job?.length > 0" [innerHTML]="user?.job"></div>
             </ion-label>
             <ion-label *ngIf="!user?.firstname && !user?.lastname">
@@ -35,10 +41,18 @@
           class="ion-padding-horizontal">
         <!-- only desc section -->
         <ion-col *ngIf="section?.key === 'desc'">
-          <ion-icon (click)="sectionsEditable[index].value = !sectionsEditable[index].value" size="small" color="primary" class="ion-float-right" name="create"></ion-icon>
+          <!-- editable icon -->
+          <ion-icon
+              name="create"
+              size="small"
+              color="primary"
+              class="ion-float-right"
+              (click)="sectionsEditable[index].value = !sectionsEditable[index].value"></ion-icon>
+          <!-- [Display] -->
           <ion-text *ngIf="!sectionsEditable[index].value">
             <div [innerHTML]="user?.desc"></div>
           </ion-text>  
+          <!-- [Editable] -->
           <form [formGroup]="userDataForm" class="ion-padding-bottom" *ngIf="sectionsEditable[index].value">
             <quill-editor [formControlName]="section.key"></quill-editor>
             <ion-button
@@ -46,18 +60,26 @@
                 (click)="save(userDataForm.value)">Enregistrer</ion-button>
           </form>
         </ion-col>
+        <!-- Loop all sections exept "desc.section" -->
         <ion-col *ngIf="section?.key !== 'desc'">
+          <!-- Section Title  -->
           <ion-text color="primary">
             <h2>
               {{section?.title}}
-              <ion-icon (click)="(section?.action) ? section.action(index) : sectionsEditable[index].value = !sectionsEditable[index].value" size="small" class="ion-float-right" name="create"></ion-icon>
+              <ion-icon 
+                name="create"
+                size="small"
+                class="ion-float-right"
+                (click)="(section?.action)
+                  ? section?.action(index)
+                  : section.value = !section.value"></ion-icon>
             </h2>
           </ion-text>
           <!-- If is string -->
           <div *ngIf="section.isString">
             <!-- [Display] -->
             <ion-text *ngIf="!sectionsEditable[index].value">
-            <div [innerHTML]="user[section?.key]"></div>
+              <div [innerHTML]="user[section?.key]"></div>
             </ion-text>
             <!-- [Editable] -->
             <form [formGroup]="userDataForm" *ngIf="sectionsEditable[index].value" class="ion-padding-bottom">
@@ -69,70 +91,23 @@
           </div>
           <!-- If is array data Skill-->
           <div *ngIf="section?.isArray && section?.key === 'skills'">
-            <!-- [Display] -->
-            <div *ngIf="!sectionsEditable[index].value">
-              {{user[section?.key] | json}}
-            </div>
             <!-- [Editable] -->
-            <form [formGroup]="userDataForm" *ngIf="sectionsEditable[index].value" [formArrayName]="section.key">
-              <ion-chip *ngFor="let skill of user?.skills; let cIndex = index">
-                <ion-label>{{skill?.name}}</ion-label>
-                <ion-icon name="close-circle"></ion-icon>
-              </ion-chip>
+            <form [formGroup]="skillForm" *ngIf="section?.value">
               <ion-item>
-                <ion-input type="text" ></ion-input>
-                <ion-button slot="end">
+                <ion-input type="text" formControlName="name" required></ion-input>
+                <ion-button (click)="addSkill()" slot="end">
                   <ion-icon name="add"></ion-icon>
                 </ion-button>
               </ion-item>
             </form>
-          </div>
-          <!-- If is object data Contact -->
-          <div *ngIf="section?.key === 'contact'">
             <!-- [Display] -->
-            <div *ngIf="!sectionsEditable[index].value" lines="none">
-              <ion-text *ngIf="user?.firstname || user?.lastname">{{user?.firstname}} {{user?.lastname}}</ion-text>
-              <ion-text *ngIf="user?.contact?.street">
-                {{user?.contact?.street}}<br/>
-                {{user?.contact?.zipCode}} {{user?.contact?.city}}<br/>
-                {{user?.contact?.country}}<br/>
-              </ion-text>
+            <div>
+              <ion-chip *ngFor="let item of user[section?.key]">
+                <ion-label>{{item?.name}}</ion-label>
+                <!-- [Editable] -->
+                <ion-icon *ngIf="sectionsEditable[index].value" name="close-circle"></ion-icon>
+              </ion-chip>
             </div>
-            <!-- [Editable] -->
-            <form [formGroup]="userDataForm" *ngIf="sectionsEditable[index].value">
-              <ion-list>
-                <ion-item>
-                  <ion-label>Nom</ion-label>
-                  <ion-input formControlName="lastname" type="text"></ion-input>
-                </ion-item>
-                <ion-item> 
-                  <ion-label>Prénom</ion-label>
-                  <ion-input formControlName="firstname" type="text"></ion-input>
-                </ion-item>
-              </ion-list>
-
-              <ion-list [formGroupName]="section.key">
-                <ion-item>
-                  <ion-label>Street</ion-label>
-                  <ion-input formGroupName="street" type="text"></ion-input>
-                </ion-item>
-                <ion-item>
-                  <ion-label>NPA</ion-label>
-                  <ion-input formGroupName="zipCode" type="text"></ion-input>
-                </ion-item>
-                <ion-item>
-                  <ion-label>Ville</ion-label>
-                  <ion-input formGroupName="city" type="text"></ion-input>
-                </ion-item>
-                <ion-item>
-                  <ion-label>Pays</ion-label>
-                  <ion-input formGroupName="country" type="text"></ion-input>
-                </ion-item>
-              </ion-list>
-              <ion-button
-                [disabled]="userDataForm.pristine" 
-                (click)="save(userDataForm.value)">Enregistrer</ion-button> 
-            </form>
           </div>
           <!-- if is data Trainings -->
           <div *ngIf="section?.key === 'trainings'">
@@ -214,8 +189,54 @@
                   <ion-icon slot="end" name="close"></ion-icon>
                 </ion-item>
               </ion-list>
+            </form> 
+          </div>
+          <!-- If is object data Contact -->
+          <div *ngIf="section?.key === 'contact'">
+            <!-- [Display] -->
+            <div *ngIf="!sectionsEditable[index].value" lines="none">
+              <ion-text *ngIf="user?.firstname || user?.lastname">{{user?.firstname}} {{user?.lastname}}</ion-text>
+              <ion-text *ngIf="user?.contact?.street">
+                {{user?.contact?.street}}<br/>
+                {{user?.contact?.zipCode}} {{user?.contact?.city}}<br/>
+                {{user?.contact?.country}}<br/>
+              </ion-text>
+            </div>
+            <!-- [Editable] -->
+            <form [formGroup]="userDataForm" *ngIf="sectionsEditable[index].value">
+              <ion-list>
+                <ion-item>
+                  <ion-label>Nom</ion-label>
+                  <ion-input formControlName="lastname" type="text"></ion-input>
+                </ion-item>
+                <ion-item> 
+                  <ion-label>Prénom</ion-label>
+                  <ion-input formControlName="firstname" type="text"></ion-input>
+                </ion-item>
+              </ion-list>
+
+              <ion-list [formGroupName]="section.key">
+                <ion-item>
+                  <ion-label>Street</ion-label>
+                  <ion-input formGroupName="street" type="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label>NPA</ion-label>
+                  <ion-input formGroupName="zipCode" type="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label>Ville</ion-label>
+                  <ion-input formGroupName="city" type="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label>Pays</ion-label>
+                  <ion-input formGroupName="country" type="text"></ion-input>
+                </ion-item>
+              </ion-list>
+              <ion-button
+                [disabled]="userDataForm.pristine" 
+                (click)="save(userDataForm.value)">Enregistrer</ion-button> 
             </form>
-            
           </div>
         </ion-col>
       </ion-row>

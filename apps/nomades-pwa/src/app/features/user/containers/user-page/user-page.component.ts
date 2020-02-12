@@ -7,6 +7,7 @@ import { ModalController } from '@ionic/angular';
 import { IAuth, IUser } from '@nomades-network/api-interfaces';
 import { UserService } from '@nomades-network/core/services';
 import { CurrentUserStoreService } from '@nomades-network/ngrx/lib/currentUser/currentUser-store.service';
+import { getSectionsEditable } from '../../utils';
 
 
 @Component({
@@ -17,54 +18,33 @@ import { CurrentUserStoreService } from '@nomades-network/ngrx/lib/currentUser/c
 })
 export class UserPageComponent implements OnInit {
 
+  // form builders
   public authForm: FormGroup;
   public userDataForm: FormGroup;
   public appearanceForm: FormGroup;
   public configForm: FormGroup;
   public trainingForm: FormGroup;
+  public skillForm: FormGroup;
+  // Observable data
   public user$: Observable<Partial<IUser & IAuth & {tz?: string}>>;
   public trainings$: Observable<{_id?: string; name?: string}[]>;
-  public readonly tz: string = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  public sectionsEditable = [
-    {
-      key: 'desc',
-      value: false,
-      title: 'Description',
-      isString: true
+  // Getm dynamic form section with data & action builder
+  public sectionsEditable = getSectionsEditable({
+    // injected action for trainings edit btn click 
+    trainings: (indexSection: string) => {
+      this.sectionsEditable[indexSection].value = !this.sectionsEditable[indexSection].value;
+      if (this.trainings$) return;
+      // request to load trainings list
+      this.trainings$ = this._userService.getTtrainingsList().pipe(
+        tap(res => console.log(res))
+      );
     },
-    {
-      key: 'job',
-      value: false,
-      title: 'Métier | Profession:',
-      isString: true
-    },
-    {
-      key: 'skills',
-      value: false,
-      title: 'Compétences:',
-      isArray: true
-    },
-    {
-      key: 'contact',
-      value: false,
-      title: 'Contact:'
-    },
-    {
-      key: 'trainings',
-      value: false,
-      title: 'Formation (Nomades):',
-      isArray: true,
-      action: (index) => {
-        this.sectionsEditable[index].value = !this.sectionsEditable[index].value;
-        // if (this.sectionsEditable[index].value) this.addTraining();
-        if (this.trainings$) return;
-        console.log('load...');
-        this.trainings$ = this._userService.getTtrainingsList().pipe(
-          tap(res => console.log(res))
-        )
-      }
+    // injected action for skills edit btn click 
+    skills: (indexSection: string) => {
+      // TODO: load existing skills as list
+      this.sectionsEditable[indexSection].value = !this.sectionsEditable[indexSection].value;
     }
-  ];
+  });
 
   constructor(
     private _userStoreService: CurrentUserStoreService,
@@ -78,6 +58,10 @@ export class UserPageComponent implements OnInit {
       cerfifiedState: new FormControl('', Validators.compose([Validators.required])),
       certifiedProject: new FormControl('', Validators.compose([Validators.required])),
       certifiedProjectUrl: new FormControl('', Validators.compose([]))
+    });
+    this.skillForm = new FormGroup({
+      name: new FormControl('', Validators.compose([Validators.required])),
+      level: new FormControl(''),
     });
     this.authForm = new FormGroup({
       _id: new FormControl('', Validators.compose([
@@ -112,11 +96,7 @@ export class UserPageComponent implements OnInit {
       }),
       desc: new FormControl('', Validators.compose([])),
       job: new FormControl('', Validators.compose([])),
-      skills: new FormArray([
-        // new FormGroup({
-        //   name: new FormControl('', Validators.compose([])),
-        // })
-      ]),
+      skills: new FormArray([]),
       trainings: new FormArray([]),
 
     });
@@ -126,12 +106,22 @@ export class UserPageComponent implements OnInit {
   async loadUserData() {
     // const user = await this._userService.getCurrentUser();
     this.user$ = this._userStoreService.getCurrentUser().pipe(
+      // patch authForm
       tap(user => {
         if (!user || !user._id)
           return;
         this.authForm.patchValue(user);
+      }),
+      // patch userDataForm
+      tap(user => {
+        if (!user || !user._id)
+          return;
         this.userDataForm.patchValue(user);
-        // set trainings value
+      }),
+      // patch trainings for userDataForm
+      tap(user => {
+        if (!user || !user._id)
+          return;
         // reset control
         if (user.trainings) this.userDataForm.get('trainings')['controls'] = [];
         // add existing training
@@ -145,8 +135,22 @@ export class UserPageComponent implements OnInit {
           // patch value
           (this.userDataForm.get('trainings') as FormArray).push(group)
         })
-        console.log('from value: ', this.userDataForm.value);
-        
+      }),
+      // patch skills for userDataForm
+      tap(user => {
+        if (!user || !user._id)
+          return;
+        // reset control
+        if (user.skills) this.userDataForm.get('skills')['controls'] = [];
+        // add existing skills
+        if (user.skills) user.skills.map(t => {
+          const group = new FormGroup({
+            name: new FormControl(t.name, Validators.compose([Validators.required])),
+            value: new FormControl(t.level, Validators.compose([]))
+          });
+          // patch value
+          (this.userDataForm.get('skills') as FormArray).push(group)
+        })
       })
     );
   }
@@ -164,22 +168,18 @@ export class UserPageComponent implements OnInit {
     this.save(this.userDataForm.value);
   }
 
-  // async editTrainings () {
-  //   // get user data from store
-  //   const user = await this.user$.pipe(first()).toPromise().catch(err => err);
-  //   // create modal and pass component & componentProps
-  //   const ionModal = await this._modalCtrl.create({
-  //     component: TrainingFormComponent,
-  //     componentProps: {user}
-  //   });
-  //   // display modal
-  //   await ionModal.present();
-  //   // wait on close to handle updated data
-  //   const {data = null, ...error} = await ionModal.onDidDismiss().then(res => res).catch(err => err);
-  //   // send value to backend with store action
-  //   console.log('dataUpdated from modal: ', data, error);
-  // }
-
+  addSkill() {
+    console.log('addSkill...', this.skillForm.value);
+    const group = new FormGroup({
+      name: new FormControl(this.skillForm.value.name, Validators.compose([Validators.required])),
+      level: new FormControl(this.trainingForm.value.level, Validators.compose([])),
+    });
+    (this.userDataForm.get('skills') as FormArray).push(group);
+    this.skillForm.reset();
+    this.sectionsEditable.find(s => s.key === 'skills').value = false;
+    this.save(this.userDataForm.value);
+  }
+  
   modify(controlName: string) {
     this.sectionsEditable[controlName] = !this.sectionsEditable[controlName];
   }
@@ -191,8 +191,6 @@ export class UserPageComponent implements OnInit {
     } 
     console.log('to save-> ', {...userData});
     this._userStoreService.dispatchUpdateAction({...userData, _id: this.userDataForm.value._id})
-    // this.authForm.markAsPristine();
-    // this.authForm.patchValue(userData, { emitEvent: false });
     this.userDataForm.markAsPristine();
     this.userDataForm.patchValue(userData, { emitEvent: false });
   }
