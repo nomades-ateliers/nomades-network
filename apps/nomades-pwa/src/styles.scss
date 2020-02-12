@@ -11,6 +11,29 @@
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
 
+// Bof - add Quill rules
+@import '~quill/dist/quill.core.css';
+@import '~quill/dist/quill.snow.css';
+
+.ql-toolbar {
+  background: #fff;
+}
+[contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
+  background: #fff;
+}
+
+quill-editor {
+  // min-height: 200px;
+  height: 100%;
+  width: 100%;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+// Eof - Quill
+
 .header-md:after {
   background: none;
 }

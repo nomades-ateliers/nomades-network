@@ -38,7 +38,9 @@
                 "input": "apps/nomades-pwa/src/styles.scss"
               }
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/quill/dist/quill.min.js"
+            ]
           },
           "configurations": {
             "production": {
