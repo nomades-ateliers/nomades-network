@@ -37,3 +37,27 @@ quill-editor {
 .header-md:after {
   background: none;
 }
+
+
+// ion-split-pane.md.split-pane-md.hydrated {
+  body {
+  // --background: red;
+  background: url('./assets/images/bg.jpg') right bottom no-repeat;
+  background-size: cover;
+}
+
+ion-router-outlet, ion-content, ion-header, ion-toolbar, #menu-content {
+  --background: none;
+  background: none;
+}
+ion-split-pane{
+  background: rgba(255, 255, 255, 0.5);
+}
+
+ion-content.ion-padding.md.hydrated {
+  background: none;
+}
+
+main {
+  background: none;
+}

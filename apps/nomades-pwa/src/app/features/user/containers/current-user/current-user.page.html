@@ -50,7 +50,10 @@
               (click)="toogleEditState(index)"></ion-icon>
           <!-- [Display] -->
           <ion-text class="descContentText" *ngIf="!sectionsEditable[index].value">
-            <div [innerHTML]="user?.desc"></div>
+            <div *ngIf="user?.desc" [innerHTML]="user?.desc"></div>
+            <p *ngIf="!user?.desc" (click)="toogleEditState(index)">
+              <small><i>ajoutez une description</i></small>
+            </p>
           </ion-text>  
           <!-- [Editable] -->
           <form [formGroup]="userDataForm" class="ion-padding-bottom" *ngIf="sectionsEditable[index].value">
@@ -82,7 +85,10 @@
           <div *ngIf="section.isString">
             <!-- [Display] -->
             <ion-text *ngIf="!sectionsEditable[index].value">
-              <div [innerHTML]="user[section?.key]"></div>
+              <div *ngIf="user[section?.key]" [innerHTML]="user[section?.key]"></div>
+              <p *ngIf="!user[section?.key]" (click)="toogleEditState(index)">
+                <small><i>ajoutez {{sectionsEditable[index].title.toLowerCase()}}</i></small>
+              </p>
             </ion-text>
             <!-- [Editable] -->
             <form [formGroup]="userDataForm" *ngIf="sectionsEditable[index].value" class="ion-padding-bottom">
@@ -108,18 +114,21 @@
               </ion-item>
             </form>
             <!-- [Display] -->
-            <div>
+            <div *ngIf="user[section?.key] && user[section?.key]?.length >0">
               <ion-chip *ngFor="let item of user[section?.key]">
                 <ion-label>{{item?.name}}</ion-label>
                 <!-- [Editable] -->
                 <ion-icon *ngIf="sectionsEditable[index].value" name="close-circle"></ion-icon>
               </ion-chip>
             </div>
+            <p *ngIf="(!sectionsEditable[index].value && (!user[section?.key] || user[section?.key]?.length <= 0))" (click)="toogleEditState(index)">
+              <small><i>ajoutez {{sectionsEditable[index].title.toLowerCase()}}</i></small>
+            </p>
           </div>
           <!-- if is data Trainings -->
           <div *ngIf="section?.key === 'trainings'">
             <!-- [Display] -->
-            <ion-list *ngIf="!sectionsEditable[index].value">
+            <ion-list *ngIf="!sectionsEditable[index].value && !(!user[section?.key] || user[section?.key]?.length <= 0)">
               <ion-item
                 lines="none"
                 *ngFor="let training of userDataForm.get(sectionsEditable[index].key)['controls']; let tIndex = index">
@@ -130,10 +139,13 @@
                 </ion-ion-text>
               </ion-item>
             </ion-list>
+            <p *ngIf="!sectionsEditable[index].value && (!user[section?.key] || user[section?.key]?.length <= 0)" (click)="toogleEditState(index)">
+              <small><i>ajoutez {{sectionsEditable[index].title.toLowerCase()}}</i></small>
+            </p>
             <!-- [Editable] -->
             <!-- add item with save btn -->
             <form [formGroup]="trainingForm">
-              <ion-list lines="none" *ngIf="sectionsEditable[index].value">
+              <ion-list lines="none" *ngIf="sectionsEditable[index].value" class="ion-margin-bottom">
                 <ion-item lines="none">
                   <ion-label>Formation: </ion-label>
                   <ion-select *ngIf="(trainings$|async) as trainings" formControlName="name">
@@ -209,6 +221,9 @@
                 {{user?.contact?.country}}<br/>
               </ion-text>
             </div>
+            <p *ngIf="!sectionsEditable[index].value && (!user?.firstname)" (click)="toogleEditState(index)">
+              <small><i>ajoutez {{sectionsEditable[index].title.toLowerCase()}}</i></small>
+            </p>
             <!-- [Editable] -->
             <form [formGroup]="userDataForm" *ngIf="sectionsEditable[index].value">
               <ion-list>
