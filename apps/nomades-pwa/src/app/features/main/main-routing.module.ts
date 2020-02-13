@@ -5,6 +5,7 @@ import { AuthGuard } from '@nomades-network/core/guards/auth/auth.guard';
 // app
 import { MainPageComponent } from './containers/main-page/main-page.component';
 import { MainDefaultPageComponent } from './containers/main-default-page/main-default-page.component';
+import { ConfirmePageComponent } from './containers/confirme-page/confirme-page-component';
 
 
 const routes: Routes = [
@@ -15,6 +16,10 @@ const routes: Routes = [
       {
         path: 'user',
         loadChildren: () => import('../user/user.module').then(m => m.UserModule)
+      },
+      {
+        path: 'confirme',
+        component: ConfirmePageComponent
       },
       {
         path: '',
