@@ -5,6 +5,7 @@ import { NavParams } from '@ionic/angular';
 import { IUser } from '@nomades-network/api-interfaces';
 import { UserService } from '@nomades-network/core/services';
 import { ActivatedRoute } from '@angular/router';
+import { getSectionsEditable } from '../../utils';
 
 @Component({
   selector: 'nomades-network-user-page',
@@ -16,7 +17,8 @@ export class UserPageComponent implements OnInit {
 
   // Observable data
   public user$: Observable<IUser>;
-
+  public sectionsEditable = getSectionsEditable();
+  
   constructor(
     private _userService: UserService,
     private _route: ActivatedRoute

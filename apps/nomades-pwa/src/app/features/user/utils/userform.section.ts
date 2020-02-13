@@ -1,5 +1,5 @@
 
-export const getSectionsEditable = (actions: { trainings: Function; skills: Function; }) =>  [
+export const getSectionsEditable = (actions?: { trainings?: Function; skills?: Function; }) =>  [
   {
     key: 'desc',
     value: false,
@@ -17,7 +17,7 @@ export const getSectionsEditable = (actions: { trainings: Function; skills: Func
     value: false,
     title: 'Compétences',
     isArray: true,
-    action: actions.skills
+    action: (actions && actions.skills) ? actions.skills : null
   },
   {
     key: 'contact',
@@ -29,6 +29,6 @@ export const getSectionsEditable = (actions: { trainings: Function; skills: Func
     value: false,
     title: 'Formation(s) Nomades',
     isArray: true,
-    action: actions.trainings
+    action: (actions && actions.trainings) ? actions.trainings : null
   }
 ];

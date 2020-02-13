@@ -7,11 +7,92 @@
 <ion-content class="ion-content"> 
 
     <ion-grid *ngIf="user$|async as user">
-      <ion-row>
-        <ion-col>
-          <pre>
-            {{user|json}}
-          </pre>
+
+      <ion-row class="ion-margin-bottom ion-padding-horizontal">
+        <ion-col size="12" class="ion-text-center">
+          <!-- Profil image -->
+          <ion-avatar>
+            <ion-img [src]="user | gavatar | async"></ion-img>
+          </ion-avatar>
+        </ion-col>
+        <ion-col class="ion-margin-top">
+          <!-- Display user name OR email -->
+          <ion-text>
+            <ion-label *ngIf="user?.firstname || user?.lastname">
+              <p>
+                {{user?.firstname}} {{user?.lastname}}
+              </p>
+              <div *ngIf="user?.job && user?.job?.length > 0" [innerHTML]="user?.job"></div>
+            </ion-label>
+            <ion-label *ngIf="!user?.firstname && !user?.lastname">
+              {{user?.email}}
+            </ion-label> 
+          </ion-text>
+        </ion-col>
+      </ion-row>
+  
+      <!-- loop for each section editable -->
+      <ion-row
+          *ngFor="let section of sectionsEditable; let index = index"
+          class="ion-padding-horizontal">
+        <!-- only "desc" section -->
+        <ion-col *ngIf="section?.key === 'desc'">
+          <!-- [Display] -->
+          <ion-text class="descContentText" *ngIf="!sectionsEditable[index].value">
+            <div [innerHTML]="user?.desc"></div>
+          </ion-text> 
+        </ion-col>
+        <!-- Loop all sections exept "desc.section" -->
+        <ion-col *ngIf="section?.key !== 'desc'">
+          <!-- Section Title  -->
+          <ion-text color="primary">
+            <h2>
+              {{section?.title}}
+            </h2>
+          </ion-text>
+          <!-- If is string -->
+          <div *ngIf="section.isString">
+            <!-- [Display] -->
+            <ion-text *ngIf="!sectionsEditable[index].value">
+              <div [innerHTML]="user[section?.key]"></div>
+            </ion-text>
+          </div>
+          <!-- If is array data Skill-->
+          <div *ngIf="section?.isArray && section?.key === 'skills'">
+            <!-- [Display] -->
+            <div>
+              <ion-chip *ngFor="let item of user[section?.key]">
+                <ion-label>{{item?.name}}</ion-label>
+              </ion-chip>
+            </div>
+          </div>
+          <!-- if is data Trainings -->
+          <div *ngIf="section?.key === 'trainings'">
+            <!-- [Display] -->
+            <ion-list *ngIf="!sectionsEditable[index].value">
+              <ion-item
+                lines="none"
+                *ngFor="let training of user?.trainings; let tIndex = index">
+                <ion-ion-text class="ion-text-wrap">
+                  <h3>{{training?.name}}</h3>
+                  <p>{{training?.cerfifiedState}}</p>
+                  <a [href]="training?.certifiedProjectUrl" [title]="training?.certifiedProject">{{training?.certifiedProjectUrl}}</a>
+                </ion-ion-text>
+              </ion-item>
+            </ion-list>
+          </div>
+          <!-- If is object data Contact -->
+          <div *ngIf="section?.key === 'contact'">
+            <!-- [Display] -->
+            <div *ngIf="!sectionsEditable[index].value" lines="none">
+              <ion-text *ngIf="user?.firstname || user?.lastname">{{user?.firstname}} {{user?.lastname}}</ion-text>
+              <ion-text *ngIf="user?.contact?.street">
+                {{user?.contact?.street}}<br/>
+                {{user?.contact?.zipCode}} {{user?.contact?.city}}<br/>
+                {{user?.contact?.country}}<br/>
+              </ion-text>
+            </div>
+          </div>
         </ion-col>
       </ion-row>
     </ion-grid>
