@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 // libs
 import { AuthStoreService } from '@nomades-network/ngrx/lib/auth/auth-store.service';
@@ -8,7 +8,8 @@ import { AuthPageBaseComponent } from '@nomades-network/features/auth/containers
 @Component({
   selector: 'nomades-network-auth-page',
   templateUrl: './auth-page.component.html',
-  // styleUrls: ['./auth-page.component.scss']
+  styleUrls: ['./auth-page.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class AuthPageComponent extends AuthPageBaseComponent implements OnInit {
   

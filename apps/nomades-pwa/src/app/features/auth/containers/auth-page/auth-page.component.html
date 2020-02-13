@@ -1,45 +1,64 @@
 <ion-content class="ion-padding">
-    
-    <h1 *ngIf="!loginBtn">
-      Création de compte
-    </h1>
-    <form [formGroup]="authForm" class="ion-text-center ion-margin-bottom">
-      <div [hidden]="loginBtn">
+  <div class="flex-container">
+
+    <div [ngClass]="{
+          'center-content': true,
+          'margin-login': loginBtn
+          }">
+      <ion-text *ngIf="!loginBtn" color="primary">
+        <h1>
+          Création de compte
+        </h1>
+      </ion-text>
+      <form [formGroup]="authForm" class="ion-text-center ion-margin-bottom">
+        <div [hidden]="loginBtn">
+          <ion-item>
+            <ion-label>Nom:</ion-label>
+            <ion-input formControlName="lastname" type="text" ></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>Prénom:</ion-label>
+            <ion-input formControlName="firstname" type="text" ></ion-input>
+          </ion-item>  
+        </div>
         <ion-item>
-          <ion-label>Nom:</ion-label>
-          <ion-input formControlName="lastname" type="text" ></ion-input>
+          <ion-label>Email:</ion-label>
+          <ion-input formControlName="email" type="email" ></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label>Prénom:</ion-label>
-          <ion-input formControlName="firstname" type="text" ></ion-input>
-        </ion-item>  
-      </div>
-      <ion-item>
-        <ion-label>Email:</ion-label>
-        <ion-input formControlName="email" type="email" ></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label>Password:</ion-label>
-        <ion-input formControlName="password" type="password" ></ion-input>
-      </ion-item>
-      <br/>
-      <ion-button
-          class="ion-margin-top"
-          (click)="(loginBtn) ? send('login') : send('create')">
-        {{(loginBtn) ? 'Se connecter' : 'Créer un compte'}}
-      </ion-button>
-    </form>
+          <ion-label>Password:</ion-label>
+          <ion-input formControlName="password" type="password" ></ion-input>
+        </ion-item>
+        <br/>
+        <ion-button
+            class="ion-margin-top"
+            (click)="(loginBtn) ? send('login') : send('create')">
+          {{(loginBtn) ? 'Se connecter' : 'Créer un compte'}}
+        </ion-button>
+      </form>
+    </div>
 
-    <ion-note class="ion-text-center">
-      <p>
-        {{ (loginBtn) ? "Vous n'avez pas encore de compte?" : "Vous avez déja un compte?"}}<br />
-        <a href="#" (click)="$event.preventDefault(); loginBtn = !loginBtn " class="ion-color-light">{{ (loginBtn) ? "Creer un compte" : "Se connecter avec un compte existant"}}</a>
-      </p>
-    </ion-note>
-    <ion-note *ngIf="loginBtn" class="ion-text-center">
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio voluptatem cupiditate aspernatur sequi exercitationem unde ipsa eos ipsum aliquam vero dignissimos deserunt totam atque, nam itaque eaque tempore ab? Corrupti.
-      </p>
-    </ion-note>
+    <div class="footer">
 
+      <ion-note class="ion-text-center">
+        <p>
+          <span *ngIf="!loginBtn">Vous avez déja un compte?<br/></span>
+          <a href="#" 
+              (click)="$event.preventDefault(); loginBtn = !loginBtn "
+              class="ion-color-light">
+                {{(loginBtn) 
+                  ? "Creer mon compte" 
+                  : "Se connecter avec un compte existant"
+                }}
+          </a>
+        </p>
+      </ion-note>
+      <ion-note *ngIf="loginBtn" class="ion-text-left">
+        <p>
+          Nomades tribes est l'association des élèves, des alumnis et des enseignants Nomades qui permet de partager, communiquer et collaborer. 
+          Créons ensemble notre monde de demain.
+        </p>
+      </ion-note>
+    </div>
+  </div>
 </ion-content>
