@@ -94,9 +94,24 @@ export class AuthEffects {
     catchError((err: any) => this._handleErrors(err))
   );
 
+  @Effect() createUserSuccessAction$ = this._action$.pipe(
+    ofType(Auth.AuthActions.CREATE_SUCCESS),
+    switchMap((action: any) => (action && action.payload)
+      ? concat(
+          of(new Auth.TokenSaveSuccessAction(action.payload)),
+          of(new Auth.CheckAuthAction())
+        )
+      : this._handleErrors({message: 'No payload or no user data on payload'})
+    ),
+    catchError((err: any) => this._handleErrors(err)),    catchError((err: any) => this._handleErrors(err)),
+    tap(_ => {
+      this._router.navigate([`/confirme`]);
+    })
+  );
+
   @Effect() userSuccessAction$ = this._action$.pipe(
     ofType(
-      Auth.AuthActions.CREATE_SUCCESS,
+      // Auth.AuthActions.CREATE_SUCCESS,
       Auth.AuthActions.LOGIN_SUCCESS,
       // CurrentUser.CurrentUserActions.LOAD_SUCCESS
     ),
