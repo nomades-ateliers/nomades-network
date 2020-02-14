@@ -1,0 +1,121 @@
+name: Build & Deploy
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  build-and-deploy:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: config environment, npm install, build, and test
+      run: |
+        npm ci
+        export ENVIRONMENT=production && npx ts-node ./libs/core/environments/environment.config.ts
+        npm run affected:build -- --base=origin/master --parallel --configuration=production --prod
+        ls
+      env:
+        CI: true
+        ## front env
+        PROD_API_ENDPOINT: ${{ secrets.PROD_API_ENDPOINT }}
+        PROD_AUTH_TOKEN: ${{ secrets.PROD_AUTH_TOKEN }}
+        # env for API
+        ## back env
+        PROD_PORT: ${{ secrets.PROD_PORT }}
+        PROD_HOST: ${{ secrets.PROD_HOST }}
+        PROD_TOKEN_EXPIRE: ${{ secrets.PROD_TOKEN_EXPIRE }}
+        PROD_DB_USER: ${{ secrets.PROD_DB_USER }}
+        PROD_DB_PWD: ${{ secrets.PROD_DB_PWD }}
+        PROD_DB_DDB: ${{ secrets.PROD_DB_DDB }}
+        PROD_DB_HOST: ${{ secrets.PROD_DB_HOST }}
+        PROD_MAILER_FROM:  ${{ secrets.PROD_MAILER_FROM }}
+        # PROD_MAILER_REPLAYTO: 
+        PROD_MAILER_USER: ${{ secrets.PROD_MAILER_USER }}
+        PROD_MAILER_PASS: ${{ secrets.PROD_MAILER_PASS }}
+        PROD_MAILER_HOST: ${{ secrets.PROD_MAILER_HOST }}
+
+    - name: Config Heroku
+      run: |+
+        cat >~/.netrc <<EOF
+        machine api.heroku.com
+            login $HEROKU_EMAIL
+            password $HEROKU_API_KEY
+        machine git.heroku.com
+            login $HEROKU_EMAIL
+            password $HEROKU_API_KEY
+        EOF
+      env:
+        CI: true
+        HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+    - name: Deploy apps
+      run: |
+        # get list of affected apps builded
+        packages=$(ls -- dist/apps | uniq )
+        # echo  $packages
+        for dir in $packages; do
+          APP=${dir/\packages\/}
+          serviceName=${dir/\packages\/}
+          echo "::set-env name=APP::${dir/\packages\/}"
+          if [ [ $APP == *"e2e"* ] ]
+          then
+            echo "[INFO] Skip process for package e2e"
+          elif [ $APP = "api" ]
+          then
+            echo "[DEPLOY] <${serviceName}> to Heroku..."
+            # set heroku remote
+            heroku git:remote -a $(basename ${{ github.repository}})
+            # get heroku release version n°
+            # JSON_V=$(heroku releases --app=$APP -n=1 --json)
+            # VESRION=${JSON_V[*]} | tr ' ' '\n' | awk '/version/ {print NR+1}'
+            # config git with user
+            git config --global user.email "${{ secrets.GIT_USER_EMAIL}}"
+            git config --global user.name "${{ secrets.GIT_USER_NAME}}"
+            # force add dist folder to git head and commit
+            git add -f "dist/apps/${APP}"
+            git add --all
+            git commit -m "Prepare ./dist folder of ${serviceName}"
+            # create a local branch containing the splitted output folder
+            git subtree split -P "dist/apps/${APP}" -b temp
+            # commit to save changes
+            git commit --allow-empty -m 'Bundle deploy on CI local branch'
+            # force the push of the temp branch to the heroku master branch at origin
+            git push heroku temp:master -f
+            # delete the local temp 
+            git branch -D temp
+            # rmv & clean dist application folder from git HEAD
+            git rm -r --cached "dist/apps/${APP}"
+            git add --all
+            git commit --allow-empty -m 'rmv cached files'
+            echo "[SUCCESS] Deploy <${serviceName}> to Heroku"
+          else
+            echo "[DEPLOY] <${serviceName}> to FTP..."
+            node tools/scripts/ftp-deploy.js
+            echo "[SUCCESS] Deploy <${serviceName}> to FTP"
+          fi
+        done
+      env:
+        CI: true
+        APP: ${{env.APP}}
+        # env for PWA
+        ## Deploy env
+        PWA_FTP_HOST: ${{ secrets.PWA_FTP_HOST }}
+        PWA_FTP_USER: ${{ secrets.PWA_FTP_USER }}
+        PWA_FTP_PWD: ${{ secrets.PWA_FTP_PWD }}
+        PWA_FTP_ROOT: ${{ secrets.PWA_FTP_ROOT }}
+        PWA_FTP_REMOTE: ${{ secrets.PWA_FTP_REMOTE }}
+        # env for PASSPOLY API
+        ## Deploy env
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
