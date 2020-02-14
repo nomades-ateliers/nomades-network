@@ -1,0 +1,11 @@
+{
+  "name": "nomades-pwa",
+  "version": "1.0.0-beta.1",
+  "description": "Nomades Network as PWA",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

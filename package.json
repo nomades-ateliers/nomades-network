@@ -26,6 +26,7 @@
     "workspace-schematic": "nx workspace-schematic",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
+    "setup:config:prod": "export ENVIRONMENT=production && npx ts-node './libs/core/environments/environment.config.ts'",
     "deploy:pwa": "ng deploy nomades-pwa",
     "deploy:pwa:ci": "ng deploy nomades-pwa --repo=https://github.com/nomades-ateliers/nomades-network.git --name=$GIT_USER_NAME --email=$GIT_USER_EMAIL",
     "mongod": "$HOME/Applications/mongodb/bin/mongod --dbpath $HOME/Applications/mongodb/data/db",

@@ -12,10 +12,12 @@
       "tags": []
     },
     "nomades-pwa": {
-      "tags": []
+      "tags": [],
+      "ci": true
     },
     "api": {
-      "tags": []
+      "tags": [],
+      "ci": true
     },
     "api-interfaces": {
       "tags": []
