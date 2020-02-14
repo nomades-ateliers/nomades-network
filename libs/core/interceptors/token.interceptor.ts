@@ -3,7 +3,7 @@ import {HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpResponse } fro
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 // libs
-import { environment } from '../environements/environment';
+import { environment } from '../environments/environment';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {

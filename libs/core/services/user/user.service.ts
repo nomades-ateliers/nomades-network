@@ -4,7 +4,7 @@ import { Observable, of, from } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 // libs
 import { APIResponse, IUser, IAuth } from '@nomades-network/api-interfaces';
-import { environment } from '@nomades-network/core/environements/environment';
+import { environment } from '@nomades-network/core/environments/environment';
 import { TrainingService } from '../training/training.service';
 
 @Injectable({

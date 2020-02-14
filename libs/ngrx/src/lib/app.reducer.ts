@@ -1,5 +1,5 @@
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
-import { environment } from '@nomades-network/core/environements/environment';
+import { environment } from '@nomades-network/core/environments/environment';
 // app
 import { AppState } from './app.state';
 import * as fromLoading from './loading/loading.reducer';
