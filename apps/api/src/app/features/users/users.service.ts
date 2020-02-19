@@ -22,8 +22,8 @@ export class UsersService {
 
 
   private async _resetSave({auth, currentUser}: ICreatedObject) {
-    if (auth) await this.authModel.findByIdAndDelete({_id: auth._id})
-    if (currentUser) await this.userModel.findByIdAndDelete({_id: currentUser._id})
+    if (auth) await this.authModel.findByIdAndDelete({_id: auth._id}).catch(err => err)
+    if (currentUser) await this.userModel.findByIdAndDelete({_id: currentUser._id}).catch(err => err)
   }
 
   private _comparePassword(docPassword: string, password: string): boolean {
@@ -88,7 +88,8 @@ export class UsersService {
     // create User in User Collection
     const currentUser = await new this.userModel(
       new User({...data, uid: auth._id})
-    ).save().catch(err => err);
+    ).save().then(res => res.toObject()).catch(err => err);
+    // handle error    
     if (!currentUser._id || currentUser instanceof Error){
       this._resetSave(created);
       throw new HttpException(currentUser.errmsg || currentUser, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -100,6 +101,9 @@ export class UsersService {
       60 * 1000,
       currentUser
     );
+    console.log('created...');
+    // send email notif to validate account
+    // TODO: ...
     // return response
     return {statusCode: 200, currentUser, token};
   }
@@ -118,21 +122,21 @@ export class UsersService {
   }
 
   private async _getByID(_id: string): Promise<IUser> {
-    const user = await this.userModel.findOne({_id}).then(res => res.toObject()).catch(err => err);
+    const user = await this.userModel.findOne({_id}).then(res => (res) ? res.toObject() : res).catch(err => err);
     if (!user) 
       throw new NotFoundException();
     return user
   } 
 
   private async  _getByUID(uid: string): Promise<IUser> {
-    const user = await this.userModel.findOne({uid}).then(res => res.toObject()).catch(err => err);
+    const user = await this.userModel.findOne({uid}).then(res => (res) ? res.toObject() : res).catch(err => err);
     if (!user) 
       throw new NotFoundException();
     return user
   } 
 
   async update(data: Partial<IUser>, requestUID: string): Promise<APIResponse> {
-    const findUser = await this.userModel.findOne({_id: data._id}).catch(err => err);
+    const findUser = await this.userModel.findOne({_id: data._id}).then(res => (res) ? res.toObject() : res).catch(err => err);
     if (!findUser) 
       throw new NotFoundException();
     if (requestUID.toString() !== findUser.uid.toString())
@@ -140,9 +144,11 @@ export class UsersService {
     const currentUser = await this.userModel.findOneAndUpdate({
       _id: data._id
     }, {$set: new User({
-      ...findUser.toObject(),
+      ...findUser,
       ...data
-    })}, { new: true, runValidators: true}).exec().catch(err => err);
+    })}, { new: true, runValidators: true}).exec()
+    .then(res => (res) ? res.toObject() : res)
+    .catch(err => err);
     // handle error
     if (!currentUser || !currentUser._id || currentUser instanceof Error)
       throw new HttpException(

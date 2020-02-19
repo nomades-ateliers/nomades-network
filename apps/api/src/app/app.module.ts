@@ -25,7 +25,14 @@ const PROTECTED_ROUTES: RouteInfo[] = [
 ]
 @Module({
   imports: [
-    MongooseModule.forRoot(environment.getDBHost()),
+    MongooseModule.forRootAsync({
+      useFactory: () => {
+        console.log('check db url connection: -------', environment.getDBHost());
+        return {
+          uri: environment.getDBHost()
+        }
+      },
+    }),
     UsersModule
   ],
   controllers: [AppController],
