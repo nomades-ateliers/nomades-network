@@ -39,6 +39,7 @@ jobs:
         PROD_DB_PWD: ${{ secrets.PROD_DB_PWD }}
         PROD_DB_DDB: ${{ secrets.PROD_DB_DDB }}
         PROD_DB_HOST: ${{ secrets.PROD_DB_HOST }}
+        PROD_SECRET_JWT:  ${{ secrets.PROD_SECRET_JWT }}
         PROD_MAILER_FROM:  ${{ secrets.PROD_MAILER_FROM }}
         # PROD_MAILER_REPLAYTO: 
         PROD_MAILER_USER: ${{ secrets.PROD_MAILER_USER }}
