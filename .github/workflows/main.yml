@@ -102,9 +102,12 @@ jobs:
             echo "[SUCCESS] Deploy <${serviceName}> to Heroku"
           elif [ $APP = "nomades-pwa" ]
           then
-          else
             echo "[DEPLOY] <${serviceName}> to FTP..."
             npm run deploy:pwa:ci
+            echo "[SUCCESS] Deploy <${serviceName}> to FTP"
+          else
+            echo "[DEPLOY] <${serviceName}> to FTP..."
+            node tools/scripts/ftp-deploy.js
             echo "[SUCCESS] Deploy <${serviceName}> to FTP"
           fi
         done
