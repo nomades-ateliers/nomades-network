@@ -52,7 +52,7 @@
     "@ngrx/store": "^8.5.2",
     "@ngrx/store-devtools": "^8.5.2",
     "@nrwl/angular": "8.9.0",
-    "angular-cli-ghpages": "^0.6.0",
+    "angular-cli-ghpages": "^0.6.2",
     "bcryptjs": "^2.4.3",
     "core-js": "^2.5.4",
     "jsonwebtoken": "^8.5.1",
