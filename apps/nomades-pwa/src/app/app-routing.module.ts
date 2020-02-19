@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Route } from '@angular/router';
-import { AuthGuard } from '@nomades-network/core/guards/auth/auth.guard';
 import { NoAuthGuard } from '@nomades-network/core/guards/no-auth/no-auth.guard';
 
 const ROUTES: Route[] = [
@@ -15,7 +14,6 @@ const ROUTES: Route[] = [
       {
         path: '',
         loadChildren: () => import('./features/main/main.module').then(m => m.MainModule),
-        canActivate: [AuthGuard]
       }
     ],
   },
