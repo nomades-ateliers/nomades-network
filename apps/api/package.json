@@ -4,8 +4,13 @@
   "description": "Server API for Nomades Network Apps",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node main.js",
+    "dev": "cd ../.. && ng serve api",
+    "docker:dev": "nodemon --legacy-watch  ./main.js",
+    "docker:start": "node ./main.js",
+    "test": "echo \"Error: no test specified\" "
   },
+  "private": true,
   "author": "",
   "license": "ISC",
   "engines" : {
