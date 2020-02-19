@@ -13,6 +13,8 @@ export const environment = {
   secretToken: 'bad secret token',
   // methods
   getHost: (ssl = false) => `http${(ssl) ? 's' : ''}://${environment.host}:${environment.port}`,
-  getDBHost: () => `mongodb://${environment.dbHost}/${environment.dbBdd}`
+  getDBHost: () => `mongodb://${environment.dbHost}/${environment.dbBdd}`,
   // getDBHost: () => `mongodb://${environment.dbUser}:${environment.dbPwd}@${environment.dbHost}/${environment.dbBdd}`
+
+  version: 'DEV'
 };

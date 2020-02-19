@@ -24,9 +24,9 @@ async function bootstrap() {
   );
   // buid api doc
   const options = new DocumentBuilder()
-    .setTitle('Passpoly API Endpoint')
-    .setDescription('The Passpoly API description')
-    .setVersion('1.0')
+    .setTitle('Nomades Network API Endpoint')
+    .setDescription('Nomades Network Server API documentation')
+    .setVersion(environment.version)
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup(globalPrefix, app, document);
