@@ -100,9 +100,11 @@ jobs:
             git add --all
             git commit --allow-empty -m 'rmv cached files'
             echo "[SUCCESS] Deploy <${serviceName}> to Heroku"
+          elif [ $APP = "nomades-pwa" ]
+          then
           else
             echo "[DEPLOY] <${serviceName}> to FTP..."
-            node tools/scripts/ftp-deploy.js
+            npm run deploy:pwa:ci
             echo "[SUCCESS] Deploy <${serviceName}> to FTP"
           fi
         done
