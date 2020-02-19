@@ -46,6 +46,10 @@
             "production": {
               "fileReplacements": [
                 {
+                  "replace": "libs/core/environments/environment.ts",
+                  "with": "apps/nomades-pwa/src/environments/environment.prod.ts"
+                },
+                {
                   "replace": "apps/nomades-pwa/src/environments/environment.ts",
                   "with": "apps/nomades-pwa/src/environments/environment.prod.ts"
                 }
@@ -77,8 +81,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "nomades-pwa:build",
-            "proxyConfig": "apps/nomades-pwa/proxy.conf.json"
+            "browserTarget": "nomades-pwa:build"
           },
           "configurations": {
             "production": {
@@ -171,6 +174,10 @@
               "extractLicenses": true,
               "inspect": false,
               "fileReplacements": [
+                {
+                  "replace": "libs/core/environments/environment.ts",
+                  "with": "apps/api/src/environments/environment.prod.ts"
+                },
                 {
                   "replace": "apps/api/src/environments/environment.ts",
                   "with": "apps/api/src/environments/environment.prod.ts"

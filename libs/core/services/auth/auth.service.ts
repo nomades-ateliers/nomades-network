@@ -10,9 +10,9 @@ import { environment } from '@nomades-network/core/environments/environment';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly _isAuthUrl: string =   '/api/users/isauth';
-  private readonly _loginUrl: string =    '/api/users/login';
-  private readonly _signUpUrl: string =   '/api/users/create';
+  private readonly _isAuthUrl: string =  environment.apiEndpoint + '/api/users/isauth';
+  private readonly _loginUrl: string =   environment.apiEndpoint + '/api/users/login';
+  private readonly _signUpUrl: string =  environment.apiEndpoint + '/api/users/create';
 
   constructor(private _http: HttpClient) {
   }
