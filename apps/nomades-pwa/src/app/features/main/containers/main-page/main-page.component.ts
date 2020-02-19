@@ -15,7 +15,7 @@ import { IUser } from '@nomades-network/api-interfaces';
         <ion-content>
           <ion-card *ngIf="currentUser$|async as user">
             <ion-card-header>
-              <ion-avatar>
+              <ion-avatar class="ion-margin-top">
                 <ion-img [src]="user | gavatar | async"></ion-img>
               </ion-avatar>
             </ion-card-header>
