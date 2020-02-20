@@ -15,7 +15,7 @@
       <ion-row class="ion-margin-bottom ion-padding-horizontal">
         <ion-col size="12" class="ion-text-center">
           <!-- Profil image -->
-          <ion-avatar>
+          <ion-avatar (click)="tackPicture()">
             <ion-img [src]="user | gavatar | async"></ion-img>
           </ion-avatar>
         </ion-col>

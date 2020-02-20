@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { ModalController } from '@ionic/angular';
 // libs
 import { IAuth, IUser } from '@nomades-network/api-interfaces';
-import { UserService } from '@nomades-network/core/services';
+import { UserService, CameraService } from '@nomades-network/core/services';
 import { CurrentUserStoreService } from '@nomades-network/ngrx/lib/currentUser/currentUser-store.service';
 import { getSectionsEditable } from '../../utils';
 
@@ -51,7 +51,8 @@ export class CurrentUserPageComponent implements OnInit {
   constructor(
     private _userStoreService: CurrentUserStoreService,
     private _userService: UserService,
-    private _modalCtrl: ModalController
+    private _modalCtrl: ModalController,
+    private readonly _cameraService: CameraService
   ) { }
 
   async ngOnInit() {
@@ -83,6 +84,7 @@ export class CurrentUserPageComponent implements OnInit {
       // default
       _id: new FormControl(''),
       // optional
+      avatar: new FormControl('', Validators.compose([])),
       firstname: new FormControl('', Validators.compose([])),
       lastname: new FormControl('', Validators.compose([])),
       contact: new FormGroup({
@@ -189,6 +191,15 @@ export class CurrentUserPageComponent implements OnInit {
         : (section.value = false, section)
     )
   }
+
+  async tackPicture(){
+    console.log('tackPicture...');
+    const img = await this._cameraService.takePicture().catch(err => err);
+    if (img instanceof Error)
+      return console.log('Error camera: ', img);
+    console.log('--->', img);    
+    this.userDataForm.patchValue({avatar: img});
+  } 
 
   async save(userData: Partial<IUser>){
     if (!userData) {

@@ -10,6 +10,7 @@ import { UserRoutingModule } from './user-routing.module';
 import { UserPageComponent } from './containers/user-page/user-page.component';
 import { COMPONENTS, ENTRY_COMPONENTS } from './components';
 import { CurrentUserPageComponent } from './containers/current-user/current-user.page';
+import { CameraService } from '@nomades-network/core/services';
 
 @NgModule({
   entryComponents: [
@@ -42,7 +43,9 @@ import { CurrentUserPageComponent } from './containers/current-user/current-user
       placeholder: 'Vous pouvez ajouter des commentaires ici ...',
     })
   ],
-  providers: [],
+  providers: [
+    CameraService
+  ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ]
