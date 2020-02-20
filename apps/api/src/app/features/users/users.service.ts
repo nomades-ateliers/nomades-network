@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus, NotFoundException, BadRequestException, UnauthorizedException, ForbiddenException } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Document } from 'mongoose';
@@ -47,7 +47,7 @@ export class UsersService {
       password,
       data.password
     ))
-      throw new UnauthorizedException('Password not valid!');
+      throw new ForbiddenException('Password not valid!');
     // generate token
     const token = getToken(
       environment.secretToken,
@@ -82,17 +82,19 @@ export class UsersService {
       password: hash
     }).save().catch(err => err)
     if (!auth._id || auth instanceof Error)
-      throw new HttpException(auth.errmsg || auth, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new BadRequestException(auth.errmsg || auth);
     // memory save auth
     created.auth = auth;
     // create User in User Collection
     const currentUser = await new this.userModel(
       new User({...data, uid: auth._id})
     ).save().then(res => res.toObject()).catch(err => err);
+      console.log('XXXXXXXXXX?');
     // handle error    
     if (!currentUser._id || currentUser instanceof Error){
       this._resetSave(created);
-      throw new HttpException(currentUser.errmsg || currentUser, HttpStatus.INTERNAL_SERVER_ERROR);
+      
+      throw new BadRequestException(currentUser.errmsg || currentUser);
     }
     created.currentUser = currentUser;
     // generate token

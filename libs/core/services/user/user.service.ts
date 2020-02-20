@@ -12,8 +12,8 @@ import { TrainingService } from '../training/training.service';
 })
 export class UserService {
 
-  public apiAuthServicePath = '/auth';
-  public apiUserServicePath = '/users';
+  public apiAuthServicePath = environment.apiEndpoint + '/api/auth';
+  public apiUserServicePath = environment.apiEndpoint + '/api/users';
 
   constructor(
     private _http: HttpClient,
@@ -23,7 +23,7 @@ export class UserService {
 
   update(data: Partial<IUser>): Observable<APIResponse> {
     return this._http
-      .put<APIResponse>('/api/users/' + data._id, data)
+      .put<APIResponse>(environment.apiEndpoint + '/api/users/' + data._id, data)
       .pipe(
         map(res => res || null),
         // tap(state => console.log('--- service: ',state)),
@@ -41,7 +41,7 @@ export class UserService {
   }
 
   getUserById(id: string): Observable<IUser> {
-    return this._http.get<APIResponse>('/api/users/' + id).pipe(
+    return this._http.get<APIResponse>(environment.apiEndpoint + '/api/users/' + id).pipe(
       map(response => (response.users)
         ? response.users.find(u => u._id === id)
         : null

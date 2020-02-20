@@ -34,6 +34,17 @@ export const userSchema = new Schema<IUser & Document>({
     type: String,
     require: false
   },
+  contact: {
+    street: String,
+    street2: String,
+    street_number: String,
+    zipCode: String,
+    city: String,
+    state: String,
+    country: String,
+    countryCode: String,
+    default: String,  
+  },
   created: {
     type: Date,
     require: false,

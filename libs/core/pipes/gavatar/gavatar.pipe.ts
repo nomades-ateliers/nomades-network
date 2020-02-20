@@ -26,7 +26,7 @@ export class GavatarPipe implements PipeTransform {
 
   private _getGravatar(email: string): string {
     const emailHash = Md5.hashStr(email.trim().toLowerCase());
-    return `http://www.gravatar.com/avatar/${emailHash}`;
+    return `https://www.gravatar.com/avatar/${emailHash}`;
   }
 
   private _preload(url: string): void{

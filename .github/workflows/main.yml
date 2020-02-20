@@ -39,6 +39,7 @@ jobs:
         PROD_DB_PWD: ${{ secrets.PROD_DB_PWD }}
         PROD_DB_DDB: ${{ secrets.PROD_DB_DDB }}
         PROD_DB_HOST: ${{ secrets.PROD_DB_HOST }}
+        PROD_SECRET_JWT:  ${{ secrets.PROD_SECRET_JWT }}
         PROD_MAILER_FROM:  ${{ secrets.PROD_MAILER_FROM }}
         # PROD_MAILER_REPLAYTO: 
         PROD_MAILER_USER: ${{ secrets.PROD_MAILER_USER }}
@@ -100,6 +101,11 @@ jobs:
             git add --all
             git commit --allow-empty -m 'rmv cached files'
             echo "[SUCCESS] Deploy <${serviceName}> to Heroku"
+          # elif [ $APP = "nomades-pwa" ]
+          # then
+          #   echo "[DEPLOY] <${serviceName}> to FTP..."
+          #   npm run deploy:pwa:ci
+          #   echo "[SUCCESS] Deploy <${serviceName}> to FTP"
           else
             echo "[DEPLOY] <${serviceName}> to FTP..."
             node tools/scripts/ftp-deploy.js

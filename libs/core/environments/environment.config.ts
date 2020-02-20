@@ -35,6 +35,7 @@ DB_USER: string,
 DB_PWD: string,
 DB_DDB: string,
 DB_HOST: string,
+SECRET_JWT: string,
 MAILER_FROM: string,
 MAILER_REPLAYTO: string,
 MAILER_USER: string,
@@ -55,6 +56,7 @@ switch (true) {
     DB_PWD = process.env.PROD_DB_PWD;
     DB_DDB = process.env.PROD_DB_DDB;
     DB_HOST = process.env.PROD_DB_HOST;
+    SECRET_JWT = process.env.PROD_SECRET_JWT;
     // mailer module
     MAILER_FROM = process.env.PROD_MAILER_FROM;
     MAILER_REPLAYTO = process.env.PROD_MAILER_REPLAYTO;
@@ -74,6 +76,7 @@ switch (true) {
     DB_PWD = process.env.STAGE_DB_PWD;
     DB_DDB = process.env.STAGE_DB_DDB;
     DB_HOST = process.env.STAGE_DB_HOST;
+    SECRET_JWT = process.env.STAGE_SECRET_JWT;
     MAILER_FROM = process.env.STAGE_MAILER_FROM;
     MAILER_REPLAYTO = process.env.STAGE_MAILER_REPLAYTO;
     MAILER_USER = process.env.STAGE_MAILER_USER;
@@ -92,6 +95,7 @@ switch (true) {
     DB_PWD = process.env.DB_PWD || '';
     DB_DDB = process.env.DB_DDB || 'test';
     DB_HOST = process.env.DB_HOST || 'localhost';
+    SECRET_JWT = process.env.SECRET_JWT || 'Bad secret jwt';
     MAILER_FROM = process.env.MAILER_FROM || null;
     MAILER_REPLAYTO = process.env.MAILER_REPLAYTO || null;
     MAILER_USER = process.env.MAILER_USER;
@@ -134,6 +138,7 @@ const APPS = [...nxApps.map(app => {
           dbPwd: '${DB_PWD}',
           dbBdd: '${DB_DDB}',
           dbHost: '${DB_HOST}',
+          secretToken: '${SECRET_JWT}',
           mailer: {
             from: '${MAILER_FROM}',
             replayTo: '${MAILER_REPLAYTO}',

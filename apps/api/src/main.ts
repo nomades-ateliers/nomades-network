@@ -4,7 +4,13 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
+import { ErrorsInterceptor } from './app/app-error.interceptor';
+import { HttpExceptionFilter } from './app/app-errors.filter';
 
+
+export const INTERCEPTORS = [
+  new ErrorsInterceptor()
+];
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,10 +23,10 @@ async function bootstrap() {
   // app.use(rateLimit({ max: 1000, windowMs: 15 * 60 * 1000 }));
   app.enableCors();
   // http error filter
-  // app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new HttpExceptionFilter());
   // add global interceptors
   app.useGlobalInterceptors(
-    // ...INTERCEPTORS,
+    ...INTERCEPTORS,
   );
   // buid api doc
   const options = new DocumentBuilder()
