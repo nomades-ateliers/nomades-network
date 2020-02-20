@@ -88,6 +88,7 @@
     "cypress": "3.6.1",
     "dotenv": "6.2.0",
     "eslint": "6.1.0",
+    "ftp-deploy": "^2.3.6",
     "jest": "24.1.0",
     "jest-preset-angular": "7.0.0",
     "prettier": "1.18.2",
