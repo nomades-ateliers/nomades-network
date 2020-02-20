@@ -26,10 +26,10 @@ export class ErrorInterceptor implements HttpInterceptor {
     console.log('-----',  exeption.error.statusCode, extractedUrl.toString());
        
     const case1 = 
-      // url.toString().includes('auth') ||
-      (extractedUrl || '').toString().includes('auth') ||
-      (extractedUrl || '').toString() === ''
-     && exeption.error.statusCode === 401;
+      // // url.toString().includes('auth') ||
+      // (extractedUrl || '').toString().includes('auth') ||
+      // (extractedUrl || '').toString() === '' || 
+     exeption.error.statusCode === 401;
     if (!case1){
       this._errorClient.displayError(exeption.error);
     }

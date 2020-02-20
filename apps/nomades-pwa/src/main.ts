@@ -10,4 +10,7 @@ if (environment.production) {
 
 platformBrowserDynamic()
   .bootstrapModule(AppModule)
+  .then(_=> {
+    console.log('Nomades Network Version: ', environment.version);
+  })
   .catch(err => console.error(err));
