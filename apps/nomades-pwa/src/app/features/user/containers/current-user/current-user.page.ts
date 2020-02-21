@@ -193,12 +193,11 @@ export class CurrentUserPageComponent implements OnInit {
   }
 
   async tackPicture(){
-    console.log('tackPicture...');
-    const img = await this._cameraService.takePicture().catch(err => err);
-    if (img instanceof Error)
-      return console.log('Error camera: ', img);
-    console.log('--->', img);    
-    this.userDataForm.patchValue({avatar: img});
+    const img = await this._cameraService.takePicture();
+    // Do not user .catch()! Let send error to main custom ErrorHandler 
+    if (!img) 
+      return; 
+    this.save({avatar: img});
   } 
 
   async save(userData: Partial<IUser>){

@@ -13,9 +13,7 @@ export class CameraService {
       allowEditing,
       resultType: CameraResultType[mode],
       source: CameraSource.Camera
-    }).catch(err => {
-      throw new Error(err);
-    });
+    })// .catch(err => err) // do no catch error to send to main Error Handler
     console.log('camera service: ', perm, image);
     // image.webPath will contain a path that can be set as an image src. 
     // You can access the original file using image.path, which can be 

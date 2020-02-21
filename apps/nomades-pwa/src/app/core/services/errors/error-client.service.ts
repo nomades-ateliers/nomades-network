@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AlertController } from '@ionic/angular';
+// libs
 import { environment } from '@nomades-network/core/environments/environment';
-// core
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +26,7 @@ export class ErrorClientService {
     let message = '';
     switch(true) {
       // is string error
-      case error.constructor === String: {
+      case error.constructor === String: {        
         message = `<li>${error}</li>`;;
         break;
       }
@@ -58,11 +58,14 @@ export class ErrorClientService {
   }
 
   async _display(message?: string) {
+    if (this.isDisplayed)
+      return;
     const ionAlert = await this._ionicAlertCtrl.create({
       header: 'Erreur',
       message: message || `Merci de redemarer l'application`
     });
-    await ionAlert.present();
+    await ionAlert.present().then(()=> this.isDisplayed = true);
+    ionAlert.onDidDismiss().then(()=> this.isDisplayed = false);
     // dispatch error to slack error feed using api error reporting url
   }
 }

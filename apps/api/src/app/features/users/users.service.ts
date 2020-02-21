@@ -123,6 +123,22 @@ export class UsersService {
     return {statusCode: 200, users: [user]} 
   }
 
+  async searchUsers(query: string): Promise<any>  {
+    if (!query){
+      throw new BadRequestException('you have to provide a query to search users');
+    }
+    const users = await this.userModel.aggregate([ 
+      { $match : { firstname : new RegExp(query)}},
+      { $match : { lastname : new RegExp(query)}},
+      { $match : { email : new RegExp(query)}},
+    ]);
+    return {
+      statusCode: 200,
+      message: 'work:s ' + query,
+      users
+    } 
+  }
+
   private async _getByID(_id: string): Promise<IUser> {
     const user = await this.userModel.findOne({_id}).then(res => (res) ? res.toObject() : res).catch(err => err);
     if (!user) 

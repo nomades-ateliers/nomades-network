@@ -15,6 +15,10 @@ const PROTECTED_ROUTES: RouteInfo[] = [
     method: RequestMethod.GET
   },
   {
+    path: '/users/search',
+    method: RequestMethod.GET
+  },
+  {
     path: '/users/:id',
     method: RequestMethod.PUT
   },
