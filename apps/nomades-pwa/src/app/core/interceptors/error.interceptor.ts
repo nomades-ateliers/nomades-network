@@ -23,13 +23,13 @@ export class ErrorInterceptor implements HttpInterceptor {
   public handleError = (exeption: HttpErrorResponse) => {
     const {finalUrl: url = '', extractedUrl = ''} = this._router.getCurrentNavigation() || {} ;
     // create exeption case 
-    console.log('-----',  exeption.error.statusCode, extractedUrl.toString());
+    console.log('-----',  exeption.error, extractedUrl.toString());
        
     const case1 = 
-      // url.toString().includes('auth') ||
-      (extractedUrl || '').toString().includes('auth') ||
-      (extractedUrl || '').toString() === ''
-     && exeption.error.statusCode === 401;
+      // url.toString().includes('auth') &&
+      // (extractedUrl || '').toString().includes('auth') ||
+      // (extractedUrl || '').toString() === '' || 
+      (exeption.error.statusCode || exeption.error.status) === 401;
     if (!case1){
       this._errorClient.displayError(exeption.error);
     }

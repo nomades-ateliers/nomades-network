@@ -15,7 +15,7 @@
       <ion-row class="ion-margin-bottom ion-padding-horizontal">
         <ion-col size="12" class="ion-text-center">
           <!-- Profil image -->
-          <ion-avatar>
+          <ion-avatar (click)="tackPicture()">
             <ion-img [src]="user | gavatar | async"></ion-img>
           </ion-avatar>
         </ion-col>
@@ -214,7 +214,7 @@
           <div *ngIf="section?.key === 'contact'">
             <!-- [Display] -->
             <div *ngIf="!sectionsEditable[index].value" lines="none">
-              <ion-text *ngIf="user?.firstname || user?.lastname">{{user?.firstname}} {{user?.lastname}}</ion-text>
+              <ion-text *ngIf="user?.firstname || user?.lastname">{{user?.firstname}} {{user?.lastname}}<br/></ion-text>
               <ion-text *ngIf="user?.contact?.street">
                 {{user?.contact?.street}}<br/>
                 {{user?.contact?.zipCode}} {{user?.contact?.city}}<br/>
@@ -237,22 +237,22 @@
                 </ion-item>
               </ion-list>
 
-              <ion-list [formGroupName]="section.key">
+              <ion-list formGroupName="contact">
                 <ion-item>
                   <ion-label>Street</ion-label>
-                  <ion-input formGroupName="street" type="text"></ion-input>
+                  <ion-input formControlName="street" type="text"></ion-input>
                 </ion-item>
                 <ion-item>
                   <ion-label>NPA</ion-label>
-                  <ion-input formGroupName="zipCode" type="text"></ion-input>
+                  <ion-input formControlName="zipCode" type="text"></ion-input>
                 </ion-item>
                 <ion-item>
                   <ion-label>Ville</ion-label>
-                  <ion-input formGroupName="city" type="text"></ion-input>
+                  <ion-input formControlName="city" type="text"></ion-input>
                 </ion-item>
                 <ion-item>
                   <ion-label>Pays</ion-label>
-                  <ion-input formGroupName="country" type="text"></ion-input>
+                  <ion-input formControlName="country" type="text"></ion-input>
                 </ion-item>
               </ion-list>
               <ion-button

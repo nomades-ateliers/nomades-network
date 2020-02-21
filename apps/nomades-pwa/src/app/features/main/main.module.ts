@@ -8,6 +8,7 @@ import { UiModule } from '@nomades-network/ui';
 import { MainRoutingModule } from './main-routing.module';
 import { CONTAINERS } from './containers';
 import { SharedPipeModule } from '@nomades-network/core/pipes';
+import { UsersStoreModule } from '@nomades-network/ngrx/lib/users/users-store.module';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { SharedPipeModule } from '@nomades-network/core/pipes';
     IonicModule,
     UiModule,
     MainRoutingModule,
+    UsersStoreModule,
     SharedPipeModule
   ]
 })

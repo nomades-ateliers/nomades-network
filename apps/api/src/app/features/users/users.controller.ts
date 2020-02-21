@@ -1,4 +1,4 @@
-import { Controller, Get, Post, BadRequestException, Req, Body, UnauthorizedException, Put, Param, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, BadRequestException, Req, Body, UnauthorizedException, Put, Param, HttpException, Query } from '@nestjs/common';
 import { Request } from 'express';
 
 // libs
@@ -25,6 +25,22 @@ export class UsersController {
     if (!user || !user.uid) throw new UnauthorizedException();
     // return response
     return this.userService.getCurrentUser(user.uid);
+  }
+
+  @Get('search')
+  async searchUsers(
+    @Req() req: Request,
+    @Query('query') value: string,
+  ): Promise<APIResponse> {
+    console.log('xxxxx', value);
+    
+    // check token
+    const user = (req as any).decoded;
+    // handle error
+    if (!user || !user.uid) throw new UnauthorizedException();
+    if (!value) throw new HttpException('No query in request', 404);
+    // return response    
+    return this.userService.searchUsers(value);
   }
 
   @Get(':id')

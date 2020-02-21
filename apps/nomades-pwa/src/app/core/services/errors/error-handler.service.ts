@@ -1,5 +1,4 @@
 import { Injectable, ErrorHandler, Injector } from '@angular/core';
-import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http'
 import { ErrorClientService } from './error-client.service';
 
@@ -13,11 +12,11 @@ export class ErrorHandlerService implements ErrorHandler {
   async handleError(error: any) {
     const errorService = this._injector.get(ErrorClientService);
     if (Error instanceof HttpErrorResponse) {
-      console.log(error.status);
+      console.log('[handleError] HttpErrorResponse: ', error.status);
     }
     else {
       // display error with service
-      await errorService.displayError(error);
+      await errorService.displayError(error).catch(err => err);
     }
   }
 }

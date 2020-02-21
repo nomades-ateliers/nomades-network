@@ -53,4 +53,7 @@ export class UserService {
     return this._trainingService.get();
   }
 
+  search(query: string) {
+    return this._http.get<APIResponse>(environment.apiEndpoint + '/api/users/search?query=' + query).pipe() 
+  }
 }

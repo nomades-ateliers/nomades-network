@@ -1,8 +1,10 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { APP_BASE_HREF } from '@angular/common';
 import { INTERCEPTORS } from './interceptors';
+import { ErrorHandlerService } from './services/errors/error-handler.service';
+import { IonicModule } from '@ionic/angular';
 
 // app
 
@@ -14,12 +16,17 @@ const MODULES = [
 ];
 const MODULES_EXPORT = [
   ...MODULES,
+  IonicModule
 ]
 const PROVIDERS = [
   {
     provide: APP_BASE_HREF,
     useValue: '/'
   },
+  // {
+  //   provide: ErrorHandler,
+  //   useClass: ErrorHandlerService
+  // },
   ...INTERCEPTORS
   // ...PIPES
 ];

@@ -19,6 +19,7 @@ export const userSchema = new Schema<IUser & Document>({
     required: true,
     index: true
   },
+  avatar: String,
   email: {
     type: String,
     require: true,
