@@ -1,6 +1,6 @@
 {
   "name": "api",
-  "version": "1.0.0-beta.1.0.3",
+  "version": "1.0.0-beta.1.0.4",
   "description": "Server API for Nomades Network Apps",
   "main": "main.js",
   "scripts": {
