@@ -82,7 +82,8 @@ jobs:
             # JSON_V=$(heroku releases --app=$APP -n=1 --json)
             # VESRION=${JSON_V[*]} | tr ' ' '\n' | awk '/version/ {print NR+1}'
             # config git with user
-            git remote set-url origin "https://${{ secrets.GIT_USER_NAME }}:${{ github.GITHUB_TOKEN}}@github.com/${{ github.repository}}.git"
+            git remote set-url origin "https://${{ secrets.GIT_USER_NAME }}:${{ secrets.GITHUB_TOKEN}}@github.com/${{ github.repository}}.git"
+            # git config remote.origin.url "https://8079728b46aad57539d26227d1489c885e4f5852@github.com/nomades-ateliers/nomades-network.git"
 
             git remote -v  
             # git remote add origin $(basename ${{ github.repository}})
