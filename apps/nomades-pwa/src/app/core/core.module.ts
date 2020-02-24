@@ -5,7 +5,6 @@ import { APP_BASE_HREF } from '@angular/common';
 import { INTERCEPTORS } from './interceptors';
 import { ErrorHandlerService } from './services/errors/error-handler.service';
 import { IonicModule } from '@ionic/angular';
-
 // app
 
 const MODULES_FOR_ROOT = [];
