@@ -38,6 +38,17 @@ quill-editor {
   background: none;
 }
 
+.default-loader {
+  .loading-wrapper{
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+  ion-spinner {
+    height: 10rem;
+    width: 10rem;
+  }
+}
 
 // ion-split-pane.md.split-pane-md.hydrated {
   body {

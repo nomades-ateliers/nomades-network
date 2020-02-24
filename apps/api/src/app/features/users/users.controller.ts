@@ -40,7 +40,7 @@ export class UsersController {
     if (!user || !user.uid) throw new UnauthorizedException();
     if (!value) throw new HttpException('No query in request', 404);
     // return response    
-    return this.userService.searchUsers(value);
+    return this.userService.searchUsers(value.toLowerCase());
   }
 
   @Get(':id')

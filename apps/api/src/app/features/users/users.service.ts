@@ -128,13 +128,27 @@ export class UsersService {
       throw new BadRequestException('you have to provide a query to search users');
     }
     const users = await this.userModel.aggregate([ 
-      { $match : { firstname : new RegExp(query)}},
-      { $match : { lastname : new RegExp(query)}},
-      { $match : { email : new RegExp(query)}},
+      {
+        $project:
+          {
+            firstname: { $toLower: "$firstname" },
+            lastname: { $toLower: "$lastname" },
+            email: { $toLower: "$email" }
+          }
+      },
+      { 
+        $match: { 
+          $or: [
+            { firstname: new RegExp(query) },
+            { lastname: new RegExp(query) },
+            { email: new RegExp(query) }
+          ]
+        }
+      }
     ]);
     return {
       statusCode: 200,
-      message: 'work:s ' + query,
+      message: 'Query search: ' + query,
       users
     } 
   }
