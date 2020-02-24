@@ -94,7 +94,7 @@ jobs:
             git commit --allow-empty -m 'Bundle deploy on CI local branch'
             # force the push of the temp branch to the heroku master branch at origin
             # git push heroku temp:master -f
-            # git push origin temp:backend-prod -f
+            git push origin temp:backend-prod -f
             # delete the local temp 
             git branch -D temp
             # rmv & clean dist application folder from git HEAD
