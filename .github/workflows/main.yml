@@ -93,14 +93,16 @@ jobs:
             # commit to save changes
             git commit --allow-empty -m 'Bundle deploy on CI local branch'
             # force the push of the temp branch to the heroku master branch at origin
-            git push heroku temp:master -f
+            # git push heroku temp:master -f
+            # git push origin temp:backend-prod -f
             # delete the local temp 
             git branch -D temp
             # rmv & clean dist application folder from git HEAD
             git rm -r --cached "dist/apps/${APP}"
             git add --all
             git commit --allow-empty -m 'rmv cached files'
-            echo "[SUCCESS] Deploy <${serviceName}> to Heroku"
+            # echo "[SUCCESS] Deploy <${serviceName}> to Heroku"
+            echo "[SUCCESS] Deploy <${serviceName}> to Jelasic"
           # elif [ $APP = "nomades-pwa" ]
           # then
           #   echo "[DEPLOY] <${serviceName}> to FTP..."
