@@ -5,6 +5,7 @@ import { APP_BASE_HREF } from '@angular/common';
 import { INTERCEPTORS } from './interceptors';
 import { ErrorHandlerService } from './services/errors/error-handler.service';
 import { IonicModule } from '@ionic/angular';
+import { UpdatesNotificationComponent } from './components/updates-notification/updates-notification.component';
 // app
 
 const MODULES_FOR_ROOT = [];
@@ -31,7 +32,9 @@ const PROVIDERS = [
 ];
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    UpdatesNotificationComponent
+  ],
   imports: [
     ...MODULES,
     ...MODULES_FOR_ROOT
