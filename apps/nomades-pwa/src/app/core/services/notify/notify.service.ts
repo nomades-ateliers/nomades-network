@@ -34,7 +34,7 @@ export class NotifyService {
   }
 
   public installApp(platform?: string) {
-    console.log('installApp on: ', platform);
+    console.log('installApp on: ', platform || window.navigator.userAgent.toLowerCase());
     // Detects if device is on iOS 
     const isIos = () => {
       const userAgent = platform || window.navigator.userAgent.toLowerCase();

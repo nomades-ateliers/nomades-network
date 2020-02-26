@@ -19,9 +19,9 @@ export class AppComponent {
     // init notif service to prevent error offline mode
     await this._notifyService.init();
     // handle platform ready to display install msg
-    this._platform.ready().then(platform => {
+    this._platform.ready().then(() => {
       // handle install application message
-      this._notifyService.installApp(platform);
+      this._notifyService.installApp();
     });
   }
 }
