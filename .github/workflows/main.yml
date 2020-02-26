@@ -106,30 +106,35 @@ jobs:
             echo "[SUCCESS] Deploy <${serviceName}> to Jelasic"
           elif [ $APP = "nomades-pwa" ]
           then
-            echo "[DEPLOY] <${serviceName}> to Jelastic..."
-            # node tools/scripts/ftp-deploy.js
-            # config git with user and remote
-            git remote set-url origin "https://${{ secrets.GIT_USER_NAME }}:${{ secrets.GITHUB_TOKEN}}@github.com/${{ github.repository}}.git"
-            git config --global user.email "${{ secrets.GIT_USER_EMAIL}}"
-            git config --global user.name "${{ secrets.GIT_USER_NAME}}"
-            # force add dist folder to git head and commit
-            git add -f "dist/apps/${APP}"
-            git add --all
-            git commit -m "Prepare ./dist folder of ${serviceName}"
-            # create a local branch containing the splitted output folder
-            git subtree split -P "dist/apps/${APP}" -b temp
-            # commit to save changes
-            git commit --allow-empty -m 'Bundle deploy on CI local branch'
-            # force the push of the temp branch to the heroku master branch at origin
-            # git push heroku temp:master -f
-            git push origin temp:pwa-prod -f
-            # delete the local temp 
-            git branch -D temp
-            # rmv & clean dist application folder from git HEAD
-            git rm -r --cached "dist/apps/${APP}"
-            git add --all
-            git commit --allow-empty -m 'rmv cached files'
-            echo "[SUCCESS] Deploy <${serviceName}> to Jelastic"
+            echo "[DEPLOY] <${serviceName}> to FTP..."
+            node tools/scripts/ftp-deploy.js
+            echo "[SUCCESS] Deploy <${serviceName}> to FTP"
+          # elif [ $APP = "nomades-pwa" ]
+          # then
+          #   echo "[DEPLOY] <${serviceName}> to Jelastic..."
+          #   # node tools/scripts/ftp-deploy.js
+          #   # config git with user and remote
+          #   git remote set-url origin "https://${{ secrets.GIT_USER_NAME }}:${{ secrets.GITHUB_TOKEN}}@github.com/${{ github.repository}}.git"
+          #   git config --global user.email "${{ secrets.GIT_USER_EMAIL}}"
+          #   git config --global user.name "${{ secrets.GIT_USER_NAME}}"
+          #   # force add dist folder to git head and commit
+          #   git add -f "dist/apps/${APP}"
+          #   git add --all
+          #   git commit -m "Prepare ./dist folder of ${serviceName}"
+          #   # create a local branch containing the splitted output folder
+          #   git subtree split -P "dist/apps/${APP}" -b temp
+          #   # commit to save changes
+          #   git commit --allow-empty -m 'Bundle deploy on CI local branch'
+          #   # force the push of the temp branch to the heroku master branch at origin
+          #   # git push heroku temp:master -f
+          #   git push origin temp:pwa-prod -f
+          #   # delete the local temp 
+          #   git branch -D temp
+          #   # rmv & clean dist application folder from git HEAD
+          #   git rm -r --cached "dist/apps/${APP}"
+          #   git add --all
+          #   git commit --allow-empty -m 'rmv cached files'
+          #   echo "[SUCCESS] Deploy <${serviceName}> to Jelastic"
           else
             echo "[DEPLOY] <${serviceName}> TODO: create task..."
           fi

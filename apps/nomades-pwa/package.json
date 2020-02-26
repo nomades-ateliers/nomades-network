@@ -1,6 +1,6 @@
 {
   "name": "nomades-pwa",
-  "version": "1.0.0-beta.1.0.4",
+  "version": "1.0.0-beta.1.0.5",
   "description": "Nomades Network as PWA",
   "main": "index.html",
   "scripts": {
