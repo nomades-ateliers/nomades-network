@@ -15,10 +15,13 @@ export class AppComponent {
     this._initializeApp();
   }
 
-  private _initializeApp() {
+  private async _initializeApp() {
+    // init notif service to prevent error offline mode
+    await this._notifyService.init();
+    // handle platform ready to display install msg
     this._platform.ready().then(platform => {
       // handle install application message
-      this._notifyService.installApp(platform || window.navigator.userAgent.toLowerCase());
+      this._notifyService.installApp(platform);
     });
   }
 }
