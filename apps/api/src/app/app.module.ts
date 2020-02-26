@@ -1,6 +1,6 @@
 import { Module, RequestMethod } from '@nestjs/common';
 import { RouteInfo, MiddlewareConsumer } from '@nestjs/common/interfaces';
-import { MongooseModule } from '@nestjs/mongoose';
+import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 // app
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -32,8 +32,11 @@ const PROTECTED_ROUTES: RouteInfo[] = [
     MongooseModule.forRootAsync({
       useFactory: () => {
         console.log('check db url connection: -------', environment.getDBHost());
-        return {
-          uri: environment.getDBHost()
+        return <MongooseModuleOptions>{
+          uri: environment.getDBHost(),
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+          useCreateIndex: true,
         }
       },
     }),
