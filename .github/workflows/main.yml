@@ -24,6 +24,7 @@ jobs:
         npm ci
         export ENVIRONMENT=production && npx ts-node ./libs/core/environments/environment.config.ts
         npm run affected:build -- --base=origin/master --parallel --configuration=production --prod
+        npx cap copy
         ls
       env:
         CI: true
