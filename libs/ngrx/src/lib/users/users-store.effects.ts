@@ -15,6 +15,17 @@ export class UsersStoreEffects {
     private _users: UserService
   ) {}
 
+  @Effect() loadAction$ = this._action$.pipe(
+    ofType(Users.UsersStoreActions.LOAD),
+    switchMap((action: any) => this._users.getAllUsers()),
+    switchMap((result) =>
+      result && result.users && isArray(result.users)
+        ? of(new Users.LoadSuccessAction(result))
+        : this._handleErrors(result as any)
+    ),
+    catchError((err: any) => of(new Users.ErrorAction(err)))
+  );
+
   @Effect() searchAction$ = this._action$.pipe(
     ofType(Users.UsersStoreActions.SEARCH),
     switchMap((action: any) => this._users.search(action.payload)),

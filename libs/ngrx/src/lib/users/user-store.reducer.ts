@@ -13,12 +13,9 @@ export function reducer(
   // run reducer to update state  
   switch (action.type) {
 
-    case UsersStoreActions.LOAD_SUCCESS: {
-      return (users) ? users : intitialState;
-    }
-
+    case UsersStoreActions.LOAD_SUCCESS: 
     case UsersStoreActions.SEARCH_SUCCESS: {
-      return (users) ? users : state;
+      return (users) ? users : intitialState;
     }
 
     case UsersStoreActions.ERROR: 

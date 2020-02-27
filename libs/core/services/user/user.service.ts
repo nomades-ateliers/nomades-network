@@ -53,6 +53,10 @@ export class UserService {
     return this._trainingService.get();
   }
 
+  getAllUsers() {
+    return this._http.get<APIResponse>(environment.apiEndpoint + '/api/users').pipe() 
+  }
+  
   search(query: string) {
     return this._http.get<APIResponse>(environment.apiEndpoint + '/api/users/search?query=' + query).pipe() 
   }
