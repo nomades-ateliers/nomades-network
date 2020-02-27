@@ -88,7 +88,10 @@ export class AuthEffects {
     switchMap((action: any) => this._auth.doCreateUser(action.payload)),
     switchMap(result =>
       result.currentUser
-        ? of(new Auth.CreateSuccessAction(result))
+        ? of(
+            new Auth.CreateSuccessAction(result),
+            new CurrentUser.LoadSuccessAction({currentUser: result.currentUser}),
+          )
         : this._handleErrors(result as any)
     ),
     catchError((err: any) => this._handleErrors(err))
