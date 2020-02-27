@@ -1,12 +1,12 @@
-import { NgModule, ErrorHandler } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { APP_BASE_HREF } from '@angular/common';
 import { INTERCEPTORS } from './interceptors';
-import { ErrorHandlerService } from './services/errors/error-handler.service';
 import { IonicModule } from '@ionic/angular';
-import { UpdatesNotificationComponent } from './components/updates-notification/updates-notification.component';
-// app
+import { COMPONENTS } from './components';
+
+
 
 const MODULES_FOR_ROOT = [];
 
@@ -33,7 +33,7 @@ const PROVIDERS = [
 
 @NgModule({
   declarations: [
-    UpdatesNotificationComponent
+    ...COMPONENTS
   ],
   imports: [
     ...MODULES,
@@ -43,6 +43,7 @@ const PROVIDERS = [
     ...PROVIDERS
   ],
   exports: [
+    ...COMPONENTS,
     ...MODULES_EXPORT
   ]
 })
