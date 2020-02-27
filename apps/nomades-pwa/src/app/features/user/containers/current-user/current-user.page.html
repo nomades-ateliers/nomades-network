@@ -8,14 +8,25 @@
   <!-- <pre *ngIf="user$|async as user" >
     {{user|json}}
   </pre> -->
-  
+    <div *ngIf="showWebcam" class="ion-text-center">
+      <webcam [height]="500" [width]="500" 
+              [trigger]="triggerObservable" 
+              (imageCapture)="handleImage($event)" 
+              [allowCameraSwitch]="true" 
+              [imageQuality]="1"
+              (click)="tackPicture()"></webcam>
+              <br/>
+      <ion-button *ngIf="showWebcam" (click)="tackPicture()">ok</ion-button>
+    </div>
 
-    <ion-grid *ngIf="user$|async as user">
+    <ion-grid [hidden]="showWebcam" *ngIf="user$|async as user">
     
       <ion-row class="ion-margin-bottom ion-padding-horizontal">
         <ion-col size="12" class="ion-text-center">
           <!-- Profil image -->
-          <ion-avatar (click)="tackPicture()">
+
+
+          <ion-avatar *ngIf="!showWebcam" (click)="tackPicture()">
             <ion-img [src]="user | gavatar | async"></ion-img>
           </ion-avatar>
         </ion-col>
