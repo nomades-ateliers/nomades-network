@@ -194,6 +194,7 @@ export class CurrentUserPageComponent implements OnInit {
 
   async tackPicture(){
     const img = await this._cameraService.takePicture();
+    console.log('response camera --->', img);
     // Do not user .catch()! Let send error to main custom ErrorHandler 
     if (!img) 
       return; 
