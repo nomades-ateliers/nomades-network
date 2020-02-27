@@ -40,9 +40,9 @@ import { UsersStoreService } from '@nomades-network/ngrx/lib/users/users-store.s
                     (click)="navTo(user?._id)"
                     *ngFor="let user of users"
                     detail="true">
-                  <ion-avatar slot="start">
+                  <!-- <ion-avatar slot="start">
                     <ion-img [src]="user | gavatar | async"></ion-img>
-                  </ion-avatar>
+                  </ion-avatar> -->
                   <label>
                     <p>
                       <span *ngIf="user?.firstname?.length > 1">{{user?.firstname}} {{user?.lastname}}<br/></span>
@@ -66,9 +66,9 @@ import { UsersStoreService } from '@nomades-network/ngrx/lib/users/users-store.s
                     (click)="navTo(user?._id)"
                     *ngFor="let user of users"
                     detail="true">
-                  <ion-avatar slot="start">
+                  <!-- <ion-avatar slot="start">
                     <ion-img [src]="user | gavatar | async"></ion-img>
-                  </ion-avatar>
+                  </ion-avatar> -->
                   <label>
                     <p>
                       <span *ngIf="user?.firstname?.length > 1">{{user?.firstname}} {{user?.lastname}}<br/></span>
