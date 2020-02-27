@@ -1,7 +1,7 @@
 {
   "appId": "ch.nomades.demo",
   "appName": "Nomades Network PWA",
-  "bundledWebRuntime": false,
+  "bundledWebRuntime": true,
   "npmClient": "npm",
   "webDir": "dist/apps/nomades-pwa",
   "cordova": {}
