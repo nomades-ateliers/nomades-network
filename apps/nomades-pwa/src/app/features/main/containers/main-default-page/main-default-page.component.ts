@@ -62,12 +62,18 @@ import { UsersStoreService } from '@nomades-network/ngrx/lib/users/users-store.s
                 <ion-list-header>
                   <ion-label>Liste des utilisateurs</ion-label>
                 </ion-list-header>
-                <ion-item *ngFor="let user of users">
+                <ion-item
+                    (click)="navTo(user?._id)"
+                    *ngFor="let user of users"
+                    detail="true">
                   <ion-avatar slot="start">
                     <ion-img [src]="user | gavatar | async"></ion-img>
                   </ion-avatar>
                   <label>
-                    {{user?.firstname}} {{user?.lastname}}
+                    <p>
+                      <span *ngIf="user?.firstname?.length > 1">{{user?.firstname}} {{user?.lastname}}<br/></span>
+                      <small>{{user?.email}}</small>
+                    </p> 
                   </label>
                 </ion-item>
               </ion-list>
@@ -105,8 +111,10 @@ export class MainDefaultPageComponent  implements OnInit {
   async search($event: CustomEvent) {
     const {detail: { value = null} = {}} = $event;
     // search user with included query in username
-    if (!value || value.length === 0)
+    if (!value || value.length === 0){
+      this._store.dispatchLoadAction();
       return this.isSearching = false;
+    }
     // dispatch rx action
     this._store.dispatchSearchAction(value);
   }

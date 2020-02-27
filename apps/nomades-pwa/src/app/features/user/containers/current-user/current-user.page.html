@@ -46,7 +46,7 @@
               [name]="(!sectionsEditable[index].value) ? 'create' : 'close'"
               size="small"
               [color]="(sectionsEditable[index].value) ? 'primary' : 'light-dark'"
-              class="ion-float-right descIconEdit"
+              class="ion-float-right descIconEdit ion-padding"
               (click)="toogleEditState(index)"></ion-icon>
           <!-- [Display] -->
           <ion-text class="descContentText" *ngIf="!sectionsEditable[index].value">
@@ -75,7 +75,7 @@
                 [name]="(!sectionsEditable[index].value) ? 'create' : 'close'"
                 size="small"
                 [color]="(sectionsEditable[index].value) ? 'primary' : 'light-dark'"
-                class="ion-float-right"
+                class="ion-float-right  ion-padding"
                 (click)="(section?.action)
                   ? section?.action(index)
                   : toogleEditState(index)"></ion-icon>
