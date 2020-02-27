@@ -116,6 +116,11 @@ export class UsersService {
     return {statusCode: 200, currentUser} 
   }
 
+  async getAllUser(): Promise<APIResponse>  {
+    const users = await this._getAll() //.catch(err => err);
+    return {statusCode: 200, users} 
+  }
+
   async getUserById(id: string): Promise<APIResponse>  {
     const user = await this._getByID(id).catch(err => err);
     if (!user || user instanceof Error)
@@ -152,6 +157,18 @@ export class UsersService {
       users
     } 
   }
+
+  private async _getAll(): Promise<IUser[]> {
+    const users = await this.userModel.find()
+    .then(res => 
+      (res && res.length > 0)
+        ? res.map(i => i.toObject())
+        : res
+    ).catch(err => err);
+    if (!users) 
+      throw new NotFoundException();
+    return users
+  } 
 
   private async _getByID(_id: string): Promise<IUser> {
     const user = await this.userModel.findOne({_id}).then(res => (res) ? res.toObject() : res).catch(err => err);

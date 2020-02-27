@@ -11,6 +11,10 @@ import { UsersModule } from './features/users/users.module';
 
 const PROTECTED_ROUTES: RouteInfo[] = [
   {
+    path: '/users',
+    method: RequestMethod.GET
+  },
+  {
     path: '/users/isAuth',
     method: RequestMethod.GET
   },

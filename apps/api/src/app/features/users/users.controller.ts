@@ -15,6 +15,18 @@ export class UsersController {
     private readonly userService: UsersService
   ) {}
 
+  @Get('')
+  async getAllUsers(
+    @Req() req: Request
+  ): Promise<APIResponse> {
+    // check token
+    const user = (req as any).decoded;
+    // handle error
+    if (!user || !user.uid) throw new UnauthorizedException();
+    // return response    
+    return this.userService.getAllUser();
+  }
+
   @Get('isAuth')
   async isAuth(
     @Req() req: Request
