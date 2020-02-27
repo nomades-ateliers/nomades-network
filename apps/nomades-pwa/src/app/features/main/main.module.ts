@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+
 // libs
 import { UiModule } from '@nomades-network/ui';
 
@@ -15,9 +15,7 @@ import { UsersStoreModule } from '@nomades-network/ngrx/lib/users/users-store.mo
   declarations: [
     ...CONTAINERS
   ],
-  providers: [],
   imports: [
-    IonicModule,
     UiModule,
     MainRoutingModule,
     UsersStoreModule,

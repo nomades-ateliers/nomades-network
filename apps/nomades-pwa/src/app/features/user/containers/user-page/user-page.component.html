@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar>
-    <ion-menu-button slot="start"></ion-menu-button>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+      <ion-menu-button></ion-menu-button>      
+    </ion-buttons>
     <!-- <ion-title>Mon profile</ion-title> -->
   </ion-toolbar>
 </ion-header>
@@ -69,7 +72,7 @@
           <!-- if is data Trainings -->
           <div *ngIf="section?.key === 'trainings'">
             <!-- [Display] -->
-            <ion-list *ngIf="!sectionsEditable[index].value">
+            <ion-list *ngIf="!sectionsEditable[index].value && user?.trainings?.length > 0">
               <ion-item
                 lines="none"
                 *ngFor="let training of user?.trainings; let tIndex = index">
