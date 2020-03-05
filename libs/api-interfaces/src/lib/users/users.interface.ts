@@ -19,6 +19,7 @@ export interface IUser {
   firstname?: string;
   lastname?: string;
   created?: number;
+  verified?: boolean;
   // datas
   avatar?: string;
   desc?: string;
