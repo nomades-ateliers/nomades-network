@@ -55,6 +55,13 @@ export class UsersController {
     return this.userService.searchUsers(value.toLowerCase());
   }
 
+  @Get('/confirm/:id')
+  async confirmEmail(
+    @Param('id') id: string,
+  ): Promise<APIResponse> {
+    return this.userService.confirmEmail(id);
+  }
+
   @Get(':id')
   async getById(
     @Req() req: Request,

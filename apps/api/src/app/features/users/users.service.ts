@@ -1,16 +1,15 @@
-import { Injectable, HttpException, HttpStatus, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, NotFoundException, BadRequestException, ForbiddenException, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Document } from 'mongoose';
 import { ISendMailOptions } from '@nest-modules/mailer';
-
 // libs
 import { APIResponse, IUser, IAuth, User } from '@nomades-network/api-interfaces';
-
 // app
 import { getToken, confirmEmailLink } from '../../app.utils';
 import { environment } from '../../../environments/environment';
 import { AppMailerService, EMAIL_DEFAULT } from '../../services/mailer.service';
+import { redis } from '../../app.redis';
 
 interface ICreatedObject {auth?: IAuth, currentUser?: IUser};
 
@@ -136,6 +135,11 @@ export class UsersService {
   async getCurrentUser(uid: string): Promise<APIResponse>  {
     // return {currentUser: null, statusCode: 200}
     const currentUser = await this._getByUID(uid) //.catch(err => err);
+    if (!currentUser.authorized)
+      throw new UnauthorizedException(`Nous n'avons pas encore authorizer votre compte. Veuillez reésayer de vous connecter plus tard.`);
+    if (!currentUser.verified)
+      throw new ForbiddenException(`Vous n'avez pas encore confirmer votre compte. Veuillez consulter vos email et suivre les instructions que nous vous avons envoyée.`);
+    
     return {statusCode: 200, currentUser} 
   }
 
@@ -229,6 +233,23 @@ export class UsersService {
       );
     return {statusCode: 200, currentUser};
   }
+
+
+  async confirmEmail(id: string): Promise<APIResponse> {
+    // get user id from redis DB
+    const _id = await redis.get(`${environment.prefix.confirmEmail}${id}`);
+    // handle unexisting user _id
+    if (!_id) {
+      throw new NotFoundException();
+    }
+    // update user with confirmed: true
+    await this.userModel.update({ _id }, { confirmed: true });
+    // delet redis key
+    await redis.del(`${environment.prefix.confirmEmail}${id}`);
+    // send basic response
+    return {statusCode: 200, message: 'User confirm with success'} 
+  }
+
 
   private async _sendEmail(options?: ISendMailOptions): Promise<{result: boolean}> {
     // send email confirmation
