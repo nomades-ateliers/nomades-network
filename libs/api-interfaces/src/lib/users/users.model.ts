@@ -10,6 +10,7 @@ export class User implements IUser {
   public lastname?: string;
   public created?: number;
   public verified?: boolean;
+  public authorized?: boolean;
   // datas
   public avatar?: string;
   public desc?: string;

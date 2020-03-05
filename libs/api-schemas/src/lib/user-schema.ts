@@ -55,5 +55,6 @@ export const userSchema = new Schema<IUser & Document>({
   job: String,
   skills: [userSkillSchema],
   trainings: [userTrainingSchema],
-  verified: Boolean
+  verified: Boolean,
+  authorized: Boolean
 });
