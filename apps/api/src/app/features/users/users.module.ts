@@ -5,6 +5,7 @@ import { authSchema, userSchema } from '@nomades-network/api-schemas';
 // app
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
+import { AppMailerService } from '../../services/mailer.service';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { UsersController } from './users.controller';
       { name: 'Auth', schema: authSchema }
     ])
   ],
-  providers: [UsersService],
+  providers: [UsersService, AppMailerService],
   controllers: [UsersController]
 })
 export class UsersModule {}
