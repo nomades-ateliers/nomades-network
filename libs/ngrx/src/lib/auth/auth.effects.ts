@@ -108,8 +108,8 @@ export class AuthEffects {
       : this._handleErrors({message: 'No payload or no user data on payload'})
     ),
     tap(async _ => {
-      // await this._router.navigate([`./confirme`]).catch(err=> err);
-      await this._router.navigate([`./`]).catch(err=> err);
+      await this._router.navigate([`./confirme`]).catch(err=> err);
+      // await this._router.navigate([`./`]).catch(err=> err);
     }),
     catchError((err: any) => this._handleErrors(err)),
   );
