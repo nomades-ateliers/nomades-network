@@ -85,27 +85,38 @@ export class UsersService {
       throw new BadRequestException(auth.errmsg || auth);
     // memory save auth
     created.auth = auth;
+    // delete secure key
+    delete data.verified;
     // create User in User Collection
-    const currentUser = await new this.userModel(
+    const currentUser: IUser = await new this.userModel(
       new User({...data, uid: auth._id})
     ).save().then(res => res.toObject()).catch(err => err);
-      console.log('XXXXXXXXXX?');
     // handle error    
     if (!currentUser._id || currentUser instanceof Error){
       this._resetSave(created);
-      
-      throw new BadRequestException(currentUser.errmsg || currentUser);
+      throw new BadRequestException((currentUser as any).errmsg || currentUser);
     }
     created.currentUser = currentUser;
+    // send email to Super admin to confirm new created user
+    // TODO: create logic
+    const {result: resultSuperAdmin = false, ...errorSuperAdmin} = await this._sendEmail().catch(err => err);
+    if (!resultSuperAdmin|| resultSuperAdmin instanceof Error){
+      this._resetSave(created);
+      throw new BadRequestException((errorSuperAdmin) ? errorSuperAdmin : resultSuperAdmin.errmsg || resultSuperAdmin);
+    }
+    // send email to created user to explaine confirm flow
+    // TODO: create logic
+    const {result: resultUser = false, ...errorUser} = await this._sendEmail({to: currentUser.email}).catch(err => err);
+    if (!resultUser|| resultUser instanceof Error){
+      this._resetSave(created);
+      throw new BadRequestException((errorUser) ? errorUser : resultUser.errmsg || resultUser);
+    }
     // generate token
     const token = getToken(
       environment.secretToken,
       60 * 1000,
       currentUser
     );
-    console.log('created...');
-    // send email notif to validate account
-    // TODO: ...
     // return response
     return {statusCode: 200, currentUser, token};
   }
@@ -205,5 +216,10 @@ export class UsersService {
         HttpStatus.BAD_REQUEST
       );
     return {statusCode: 200, currentUser};
+  }
+
+  private _sendEmail(options?: {to?: string, from?: string; text?: string, html?: string}): Promise<{result: boolean}> {
+    // TODO: implement this method
+    return Promise.resolve({result: true});
   }
 }
