@@ -2,13 +2,15 @@ import { Injectable, HttpException, HttpStatus, NotFoundException, BadRequestExc
 import * as bcrypt from 'bcryptjs';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Document } from 'mongoose';
+import { ISendMailOptions } from '@nest-modules/mailer';
 
 // libs
 import { APIResponse, IUser, IAuth, User } from '@nomades-network/api-interfaces';
 
 // app
-import { getToken } from '../../app.utils';
+import { getToken, confirmEmailLink } from '../../app.utils';
 import { environment } from '../../../environments/environment';
+import { AppMailerService, EMAIL_DEFAULT } from '../../services/mailer.service';
 
 interface ICreatedObject {auth?: IAuth, currentUser?: IUser};
 
@@ -18,6 +20,7 @@ export class UsersService {
   constructor(
     @InjectModel('Auth') private readonly authModel: Model<IAuth & Document>,
     @InjectModel('User') private readonly userModel: Model<IUser & Document>,
+    private readonly _mailerService: AppMailerService
   ) {}
 
 
@@ -105,8 +108,17 @@ export class UsersService {
       throw new BadRequestException((errorSuperAdmin) ? errorSuperAdmin : resultSuperAdmin.errmsg || resultSuperAdmin);
     }
     // send email to created user to explaine confirm flow
-    // TODO: create logic
-    const {result: resultUser = false, ...errorUser} = await this._sendEmail({to: currentUser.email}).catch(err => err);
+    // create url confirmation
+    const url = await confirmEmailLink(currentUser._id);
+    // defin value for email
+    const subject = EMAIL_DEFAULT['register'].subject;
+    const html = EMAIL_DEFAULT['register'].html(url);
+    const text = EMAIL_DEFAULT['register'].text(url);
+    // send email using private method
+    const {result: resultUser = false, ...errorUser} = await this._sendEmail({
+      to: currentUser.email, subject, html, text
+    }).catch(err => err);
+    // handle error
     if (!resultUser|| resultUser instanceof Error){
       this._resetSave(created);
       throw new BadRequestException((errorUser) ? errorUser : resultUser.errmsg || resultUser);
@@ -218,8 +230,22 @@ export class UsersService {
     return {statusCode: 200, currentUser};
   }
 
-  private _sendEmail(options?: {to?: string, from?: string; text?: string, html?: string}): Promise<{result: boolean}> {
-    // TODO: implement this method
-    return Promise.resolve({result: true});
+  private async _sendEmail(options?: ISendMailOptions): Promise<{result: boolean}> {
+    // send email confirmation
+    const {result = false, ...errorSendEmail} = (
+      environment.production &&
+      options &&
+      options.to &&
+      options.to.includes('demo')
+    )
+      ? await this._mailerService.sendMail(options).catch(err => err)
+      : {result: true};
+    // handle result error
+    if (!result) {
+      console.error('Unable to send email to new user');
+      throw new HttpException(errorSendEmail, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    // returtn result as object
+    return {result};
   }
 }
