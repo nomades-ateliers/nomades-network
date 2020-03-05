@@ -31,11 +31,18 @@ AUTH_TOKEN: string,
 HOST: string,
 PORT: string,
 TOKEN_EXPIRE: string,
+SECRET_JWT: string,
+// mongod
 DB_USER: string,
 DB_PWD: string,
 DB_DDB: string,
 DB_HOST: string,
-SECRET_JWT: string,
+// redis
+REDIS_SERVERS: string,
+REDIS_PORT: string,
+REDIS_PASS: string,
+REDIS_USER: string,
+// mailer
 MAILER_FROM: string,
 MAILER_REPLAYTO: string,
 MAILER_USER: string,
@@ -63,6 +70,11 @@ switch (true) {
     MAILER_USER = process.env.PROD_MAILER_USER;
     MAILER_PASS = process.env.PROD_MAILER_PASS;
     MAILER_HOST = process.env.PROD_MAILER_HOST;
+    // redis db
+    REDIS_SERVERS = process.env.PROD_REDIS_SERVERS;
+    REDIS_PORT = process.env.PROD_REDIS_PORT;
+    REDIS_PASS = process.env.PROD_REDIS_PASS;
+    REDIS_USER = process.env.PROD_REDIS_USER;
     break;
   case environment === 'stage':
     // front
@@ -82,6 +94,11 @@ switch (true) {
     MAILER_USER = process.env.STAGE_MAILER_USER;
     MAILER_PASS = process.env.STAGE_MAILER_PASS;
     MAILER_HOST = process.env.STAGE_MAILER_HOST;
+    // redis db
+    REDIS_SERVERS = process.env.STAGE_REDIS_SERVERS;
+    REDIS_PORT = process.env.STAGE_REDIS_PORT;
+    REDIS_PASS = process.env.STAGE_REDIS_PASS;
+    REDIS_USER = process.env.STAGE_REDIS_USER;
     break;
   default: // dev
     // front
@@ -101,6 +118,11 @@ switch (true) {
     MAILER_USER = process.env.MAILER_USER;
     MAILER_PASS = process.env.MAILER_PASS;
     MAILER_HOST = process.env.MAILER_HOST;
+    // redis db
+    REDIS_SERVERS = process.env.REDIS_SERVERS || '127.0.0.1';
+    REDIS_PORT = process.env.REDIS_PORT || '6379';
+    REDIS_PASS = process.env.REDIS_PASS || '';
+    REDIS_USER = process.env.REDIS_USER || '';
     break;
 }
 
@@ -134,17 +156,23 @@ const APPS = [...nxApps.map(app => {
           host: process.env.HOST || '${HOST}',
           port: process.env.PORT || '${PORT}',
           tokenExpire: '${TOKEN_EXPIRE}',
+          secretToken: '${SECRET_JWT}',
+          // mongodb setting
           dbUser: process.env.DB_USER || '${DB_USER}',
           dbPwd: process.env.DB_PWD || '${DB_PWD}',
           dbBdd: process.env.DB_DDB || '${DB_DDB}',
           dbHost: process.env.DB_HOST || '${DB_HOST}',
-          secretToken: '${SECRET_JWT}',
+          // redis setting
+          redisHost: process.env.REDIS_SERVERS || '${REDIS_SERVERS}',
+          redisPort: process.env.REDIS_PORT || '${REDIS_PORT}', 
+          redisUser: process.env.REDIS_USER || '${REDIS_USER}',
+          redisPwd: process.env.REDIS_PASS || '${REDIS_PASS}',
           mailer: {
-            from: '${MAILER_FROM}',
-            replayTo: '${MAILER_REPLAYTO}',
-            user: '${MAILER_USER}',
-            pass: '${MAILER_PASS}',
-            host: '${MAILER_HOST}'
+            from: process.env.MAILER_FROM || '${MAILER_FROM}',
+            replayTo: process.env.MAILER_REPLAYTO || '${MAILER_REPLAYTO}',
+            user: process.env.MAILER_USER || '${MAILER_USER}',
+            pass: process.env.MAILER_PASS || '${MAILER_PASS}',
+            host: process.env.MAILER_HOST || '${MAILER_HOST}'
           },
           getDBHost: () => 'mongodb://${DB_USER}:${DB_PWD}@${DB_HOST}/${DB_DDB}',
           version: '${getVersion('./apps/api/package.json')}'
