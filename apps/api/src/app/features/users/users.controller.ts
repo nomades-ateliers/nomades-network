@@ -44,8 +44,6 @@ export class UsersController {
     @Req() req: Request,
     @Query('query') value: string,
   ): Promise<APIResponse> {
-    console.log('xxxxx', value);
-    
     // check token
     const user = (req as any).decoded;
     // handle error
