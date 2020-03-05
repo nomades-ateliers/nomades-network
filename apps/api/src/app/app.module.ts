@@ -8,6 +8,7 @@ import { environment } from '../environments/environment';
 import { AuthorizationMiddleware } from './authorization.middleware';
 // app/features
 import { UsersModule } from './features/users/users.module';
+import { MailerModule } from '@nest-modules/mailer';
 
 const PROTECTED_ROUTES: RouteInfo[] = [
   {
@@ -43,6 +44,21 @@ const PROTECTED_ROUTES: RouteInfo[] = [
           useCreateIndex: true,
         }
       },
+    }),
+    MailerModule.forRootAsync({
+      useFactory: () => ({
+        transport: `smtps://${environment.mailer.user}:${environment.mailer.pass}@${environment.mailer.host}`,
+        // defaults: {
+        //   from:'"nest-modules" <modules@nestjs.com>',
+        // },
+        // template: {
+        //   dir: __dirname + '/templates',
+        //   adapter: new HandlebarsAdapter(), // or new PugAdapter()
+        //   options: {
+        //     strict: true,
+        //   },
+        // },
+      }),
     }),
     UsersModule
   ],
