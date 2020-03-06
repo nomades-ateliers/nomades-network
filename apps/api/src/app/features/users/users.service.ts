@@ -257,7 +257,7 @@ export class UsersService {
       environment.production &&
       options &&
       options.to &&
-      options.to.includes('demo')
+      !options.to.includes('demo')
     )
       ? await this._mailerService.sendMail(options).catch(err => err)
       : {result: true};
