@@ -1,46 +1,58 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { filter, map, take, tap } from 'rxjs/operators';
+import { filter, map, take, tap, catchError } from 'rxjs/operators';
 import * as Auth from '@nomades-network/ngrx/lib/auth/auth.actions';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '@nomades-network/core/environments/environment';
+import { APIResponse } from '@nomades-network/api-interfaces';
+import { Observable, of } from 'rxjs';
+
 
 @Injectable()
-export class AuthGuard implements CanActivate {
-  constructor(
-    private readonly router: Router,
-    private readonly store: Store<any>
-  ) {}
+export class AuthGuard   implements CanActivate {
 
-  canActivate(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot)  {
-    // Manage redirect link:
-    // find existing returnUrl data || routerState.url to create `returnUrl`
-    const returnUrl  = routerState.url.indexOf('?') > 0
-    ? routerState.url.substring(0, routerState.url.indexOf('?'))
-    : routerState.url;
-    const { queryParams = null} = route;
-    // // Dispatch check auth action
-    this.store.dispatch({type: Auth.AuthActions.CHECK_AUTH});
-    // Check Auth on store select
-    return this.store
-      .pipe(
-        select(state => state),
-        map((state) =>
-          (state.currentUser)
-            ? state
-            : Object.assign({}, state, {loading: false})
-        ),
-        filter((state) => state.loading === false ),
-        map((state) => {
-          if (state.auth) {
-            return true;
-          }
-          this.router.navigate(
-            ['/auth'],
-            // {queryParams: {returnUrl: returnUrl, ...queryParams}}
-          );
-          return false;
-        }),
-        take(1)
-      );
+  constructor(
+    private _http: HttpClient,
+    public router: Router,
+  ) {
   }
+   
+  canActivate(
+  ) {
+    // const Authorization = localStorage.getItem(environment.authToken);
+    return this._requestAPI();
+  }
+
+  private _requestAPI() {
+    return this._http.get(environment.apiEndpoint + '/api/users/isauth').pipe(
+      take(1),
+      map((res: APIResponse) => {
+        // handle incorrect response API
+        if (res && res.statusCode && res.statusCode === 200 &&  res.currentUser){
+          if (!res.currentUser.verified){
+            this.router.navigateByUrl('../confirme')
+            return false;
+          }
+          if (res.currentUser.verified && !res.currentUser.authorized){
+            this.router.navigateByUrl('../confirme')
+            return false;
+          }
+          return true;
+        }
+        throw new Error('Incorrect API response')
+      }),
+      catchError(err => {
+        // redirect to login module
+        return this._redirectAuthPage(err);
+      })
+    );
+  }
+
+  private _redirectAuthPage(err: Error): Observable<false> {
+    if (!environment.production) console.log('[AuthGuard] _redirectAuthPage: ', err);
+    this.router.navigateByUrl('/auth')
+    return of(false);
+  }
+
 }

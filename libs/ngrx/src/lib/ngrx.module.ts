@@ -8,6 +8,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 // app
 import { EffectsModule } from '@ngrx/effects';
 import { AppReducers, metaReducers } from './app.reducer';
+import { ErrorsEffects } from './errors/error.effect';
 
 @NgModule({
   imports: [
@@ -16,7 +17,9 @@ import { AppReducers, metaReducers } from './app.reducer';
       maxAge: 25, // Retains last 25 states
       // logOnly: true, // Restrict extension to log-only mode
     }),
-    EffectsModule.forRoot([])
+    EffectsModule.forRoot([
+      ErrorsEffects
+    ])
   ]
 })
 export class NgrxModule {

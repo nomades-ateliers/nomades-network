@@ -1,33 +1,53 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { filter, map, take, tap } from 'rxjs/operators';
+import { filter, map, take, tap, catchError, switchMap } from 'rxjs/operators';
 import * as Auth from '@nomades-network/ngrx/lib/auth/auth.actions';
+import { Observable, of } from 'rxjs';
+import { environment } from '@nomades-network/core/environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { APIResponse } from '@nomades-network/api-interfaces';
 
 @Injectable()
 export class NoAuthGuard implements CanActivate {
-  constructor(
-    private readonly router: Router,
-    private readonly store: Store<any>
-  ) {}
 
-  canActivate()  {
-    // // Dispatch check auth action
-    this.store.dispatch({type: Auth.AuthActions.CHECK_AUTH});
-    // Check Auth on store select
-    return this.store
-      .pipe(
-        select(state => state),
-        filter((state) => state.loading === false ),
-        map((state) => {
-          
-          if (!state.auth) {
-            return true;
+  constructor(
+    private _http: HttpClient,
+    public router: Router
+  ) {
+  }
+   
+  canActivate(
+  ) {
+    return this._http.get(environment.apiEndpoint + '/api/users/isAuth').pipe(
+      take(1),
+      switchMap((res: APIResponse) => {
+        // handle incorrect response API and redirect to wallet
+        if (res && res.statusCode && res.statusCode === 200 &&  res.currentUser){
+          if (!res.currentUser.verified){
+            this.router.navigateByUrl('../confirme')
+            return of(false);
           }
-          this.router.navigate(['/index']);
-          return false;
-        }),
-        take(1)
-      );
+          if (res.currentUser.verified && !res.currentUser.authorized){
+            this.router.navigateByUrl('../confirme')
+            return of(false);
+          }
+          return this._redirectWallet('User is auth, redirect to wallet...' as any).toPromise();
+        }
+        return of(true)
+      }),
+      catchError(err => {
+        if (err &&  err.statusCode && err.statusCode !== 200 && !err.user || !err.toString().includes('User is auth'))
+          return of(true)
+        // redirect to wallet module
+        return this._redirectWallet(err);
+      })
+    );
+  }
+
+  private _redirectWallet(err: Error): Observable<false> {
+    if (!environment.production) console.log('[NoAuthGuard]: ', err);
+    this.router.navigateByUrl('/wallet')
+    return of(false);
   }
 }

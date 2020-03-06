@@ -18,4 +18,8 @@ export class AuthPageComponent extends AuthPageBaseComponent implements OnInit {
     this.loginBtn = true;
   }
   
+  ionViewDidEnter() {
+    console.log('hi');
+    
+  }
 }

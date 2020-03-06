@@ -28,11 +28,15 @@ export class AuthEffects {
   @Effect() loginAction$ = this._action$.pipe(
     ofType(Auth.AuthActions.LOGIN),
     switchMap((action: any) => this._auth.doAuth(action.payload)),
-    switchMap((result) =>
-      result.currentUser && result.currentUser.verified && result.currentUser.authorized
-        ? of(new Auth.LoginSuccessAction(result))
-        : this._handleErrors(result as any)
-    ),
+    switchMap((result) => {
+      if (!result)
+        return this._handleErrors({message: 'No user found'});
+      if (result && result.currentUser && !result.currentUser.verified)
+        return this._handleErrors({message: 'User no verified'});
+      if (result && result.currentUser && !result.currentUser.authorized)
+        return this._handleErrors({message: 'User no authorized'})
+      return of(new Auth.LoginSuccessAction(result))
+    }),
     catchError((err: any) => of(new Auth.ErrorAction(err)))
   );
 
@@ -45,9 +49,17 @@ export class AuthEffects {
       const action = res;
       return this._auth.isAuth(action['payload']);
     }),
-    switchMap((result) =>
-      result.currentUser && result.currentUser.verified && result.currentUser.authorized
-        ? concat(
+    switchMap((result) => {
+      if (!result)
+        return this._handleErrors({message: 'No user found'});
+      if (result && !result.currentUser)
+        return this._handleErrors({message: 'User not found'});
+      if (result && result.currentUser && !result.currentUser.verified)
+        return this._handleErrors({message: 'User no verified'});
+      if (result && result.currentUser && !result.currentUser.authorized)
+        return this._handleErrors({message: 'User no authorized'});
+      return (result && result.currentUser && result.currentUser.authorized && result.currentUser.verified)
+       ? concat(
             of(
               new Auth.CheckAuthSuccessAction(result),
               new CurrentUser.LoadSuccessAction({currentUser: result.currentUser}),
@@ -58,7 +70,7 @@ export class AuthEffects {
               new Auth.CheckAuthNoUserSuccessAction()
             )
           )
-    ),
+    }),
     // tap(_=> console.log('in effect ...')),
     catchError((res: any) => this._handleErrors(res))
   );
