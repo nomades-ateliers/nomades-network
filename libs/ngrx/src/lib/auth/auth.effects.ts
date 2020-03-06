@@ -29,7 +29,7 @@ export class AuthEffects {
     ofType(Auth.AuthActions.LOGIN),
     switchMap((action: any) => this._auth.doAuth(action.payload)),
     switchMap((result) =>
-      result.currentUser
+      result.currentUser && result.currentUser.verified && result.currentUser.authorized
         ? of(new Auth.LoginSuccessAction(result))
         : this._handleErrors(result as any)
     ),
@@ -38,21 +38,19 @@ export class AuthEffects {
 
   @Effect() checkMainAction$ = this._action$.pipe(
     ofType(Auth.AuthActions.CHECK_AUTH),
-    withLatestFrom(
-      this._store.pipe(select(state => state['currentUser']))
-    ),
-    switchMap((res: [Action, ICurrentUserState]) => {
-      const [action, currentUser = null] = res;
-      // console.log('-effect: ', currentUser);
-      
+    // withLatestFrom(
+    //   this._store.pipe(select(state => state['currentUser']))
+    // ),
+    switchMap((res: Action) => {
+      const action = res;
       return this._auth.isAuth(action['payload']);
     }),
-    switchMap((res) =>
-      res.currentUser
+    switchMap((result) =>
+      result.currentUser && result.currentUser.verified && result.currentUser.authorized
         ? concat(
             of(
-              new Auth.CheckAuthSuccessAction(res),
-              new CurrentUser.LoadSuccessAction({currentUser: res.currentUser}),
+              new Auth.CheckAuthSuccessAction(result),
+              new CurrentUser.LoadSuccessAction({currentUser: result.currentUser}),
             )
           )
         : concat(
@@ -61,14 +59,14 @@ export class AuthEffects {
             )
           )
     ),
-    tap(_=> console.log('in effect ...')),
+    // tap(_=> console.log('in effect ...')),
     catchError((res: any) => this._handleErrors(res))
   );
 
   @Effect() logoutAction$ = this._action$.pipe(
     ofType(Auth.AuthActions.LOGOUT),
     switchMap(() => this._auth.doLogout()),
-    switchMap(action =>
+    switchMap(() =>
       concat(
         of(
           new Auth.TokenDeleteAction(),
@@ -88,7 +86,10 @@ export class AuthEffects {
     switchMap((action: any) => this._auth.doCreateUser(action.payload)),
     switchMap(result =>
       result.currentUser
-        ? of(new Auth.CreateSuccessAction(result))
+        ? of(
+            new Auth.CreateSuccessAction(result),
+            new CurrentUser.LoadSuccessAction({currentUser: result.currentUser}),
+          )
         : this._handleErrors(result as any)
     ),
     catchError((err: any) => this._handleErrors(err))
@@ -100,12 +101,14 @@ export class AuthEffects {
       ? 
         of(
           new Auth.TokenSaveSuccessAction(action.payload),
-          new Auth.CheckAuthAction()
+          // new Auth.CheckAuthAction()
         )
       : this._handleErrors({message: 'No payload or no user data on payload'})
     ),
     tap(async _ => {
+      console.log('redirect user to ./confirm...');
       await this._router.navigate([`./confirme`]).catch(err=> err);
+      // await this._router.navigate([`./`]).catch(err=> err);
     }),
     catchError((err: any) => this._handleErrors(err)),
   );
@@ -121,12 +124,13 @@ export class AuthEffects {
       return payload
         ? concat(
             of(new Auth.TokenSaveSuccessAction(payload)),
-            of(new Auth.CheckAuthAction())
+            // of(new Auth.CheckAuthAction())
           )
         : this._handleErrors();
     }),
     catchError((err: any) => this._handleErrors(err)),
     tap(_ => {
+      console.log('redirect user to index...');      
       const returnUrl = this._route.snapshot.queryParams['returnUrl'] || '';
       this._router.navigate([`/index`]);
       // this._router.navigate([`/${returnUrl ? returnUrl : 'index'}`]);

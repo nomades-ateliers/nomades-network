@@ -18,14 +18,14 @@ export abstract class AuthPageBaseComponent implements OnInit {
   ngOnInit() {
     this.authForm = new FormGroup({
       email: new FormControl(
-        'demo@demo.ch',
+        '', // 'demo@demo.ch',
         Validators.compose([
           Validators.required,
           Validators.email
         ])
       ),
       password: new FormControl(
-        'A123456',
+        '', // 'A123456',
         Validators.compose([
           Validators.required,
           Validators.minLength(6)

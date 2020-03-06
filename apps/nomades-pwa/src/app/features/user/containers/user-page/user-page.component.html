@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar>
-    <ion-menu-button slot="start"></ion-menu-button>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+      <ion-menu-button></ion-menu-button>      
+    </ion-buttons>
     <!-- <ion-title>Mon profile</ion-title> -->
   </ion-toolbar>
 </ion-header>
@@ -11,9 +14,9 @@
       <ion-row class="ion-margin-bottom ion-padding-horizontal">
         <ion-col size="12" class="ion-text-center">
           <!-- Profil image -->
-          <ion-avatar>
+          <!-- <ion-avatar>
             <ion-img [src]="user | gavatar | async"></ion-img>
-          </ion-avatar>
+          </ion-avatar> -->
         </ion-col>
         <ion-col class="ion-margin-top">
           <!-- Display user name OR email -->
@@ -69,7 +72,7 @@
           <!-- if is data Trainings -->
           <div *ngIf="section?.key === 'trainings'">
             <!-- [Display] -->
-            <ion-list *ngIf="!sectionsEditable[index].value">
+            <ion-list *ngIf="!sectionsEditable[index].value && user?.trainings?.length > 0">
               <ion-item
                 lines="none"
                 *ngFor="let training of user?.trainings; let tIndex = index">

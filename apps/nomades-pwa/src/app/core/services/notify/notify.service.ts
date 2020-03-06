@@ -33,7 +33,8 @@ export class NotifyService {
     await toast.present();
   }
 
-  public installApp(platform: string) {
+  public installApp(platform?: string) {
+    console.log('installApp on: ', platform || window.navigator.userAgent.toLowerCase());
     // Detects if device is on iOS 
     const isIos = () => {
       const userAgent = platform || window.navigator.userAgent.toLowerCase();
@@ -43,7 +44,7 @@ export class NotifyService {
     const isStandalone = () => ('standalone' in (window as any).navigator) && ((window as any).navigator.standalone);
     // Checks if should display install popup notification:
     if (isIos() && !isStandalone()) {
-      this.show(`Appuyez sur "Partager" dans le panneau inférieur de votre navigateur, puis sur "Ajouter à l'écran d'accueil" pour installer l'application Native et ainsi accélérer le chargement. `, null);
+      this.show(`Appuyez sur "Partager" dans le panneau inférieur de votre navigateur, puis sur "Ajouter à l'écran d'accueil" pour installer l'application Native et ainsi accélérer le chargement. `, 100000);
     }
   }
 

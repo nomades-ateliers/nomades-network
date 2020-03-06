@@ -1,11 +1,13 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ModalController } from '@ionic/angular';
+// external libs
+import {WebcamImage, WebcamInitError, WebcamUtil} from 'ngx-webcam';
 // libs
 import { IAuth, IUser } from '@nomades-network/api-interfaces';
-import { UserService, CameraService } from '@nomades-network/core/services';
+import { UserService, /* CameraService */ } from '@nomades-network/core/services';
 import { CurrentUserStoreService } from '@nomades-network/ngrx/lib/currentUser/currentUser-store.service';
 import { getSectionsEditable } from '../../utils';
 
@@ -47,12 +49,18 @@ export class CurrentUserPageComponent implements OnInit {
       // this.sectionsEditable[indexSection].value = !this.sectionsEditable[indexSection].value;
     }
   });
+  // webcam config
+  public showWebcam = false;  // webcam snapshot trigger
+  private trigger: Subject<void> = new Subject<void>();
+  public get triggerObservable(): Observable<void> {
+    return this.trigger.asObservable();
+  }
 
   constructor(
     private _userStoreService: CurrentUserStoreService,
     private _userService: UserService,
     private _modalCtrl: ModalController,
-    private readonly _cameraService: CameraService
+    // private readonly _cameraService: CameraService
   ) { }
 
   async ngOnInit() {
@@ -193,12 +201,22 @@ export class CurrentUserPageComponent implements OnInit {
   }
 
   async tackPicture(){
-    const img = await this._cameraService.takePicture();
-    // Do not user .catch()! Let send error to main custom ErrorHandler 
-    if (!img) 
-      return; 
-    this.save({avatar: img});
+    this.showWebcam = true;
+    this.trigger.next();
+    // const img = await this._cameraService.takePicture();
+    // console.log('response camera --->', img);
+    // // Do not user .catch()! Let send error to main custom ErrorHandler 
+    // if (!img) 
+    //   return; 
+    // this.save({avatar: img});
   } 
+
+  public handleImage(webcamImage: WebcamImage): void {
+    console.log('received webcam image', webcamImage);
+    // this.webcamImage = webcamImage;
+    this.save({avatar: webcamImage.imageAsBase64});
+    this.showWebcam = false;
+  }
 
   async save(userData: Partial<IUser>){
     if (!userData) {

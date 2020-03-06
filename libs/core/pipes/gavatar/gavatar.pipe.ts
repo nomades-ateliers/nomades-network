@@ -12,10 +12,10 @@ export class GavatarPipe implements PipeTransform {
 
   transform(data: {email?: string, avatar?: string, logo?: string}): Observable<string> {
     const { avatar = null, logo = null, email = ''} = data || {};
-    const url = (avatar || logo)
+    const url = ((avatar && avatar.length > 0) || (logo && logo.length > 0))
       ? this._getBase64Img(avatar || logo)
       : this._getGravatar(email);
-      this._preload(url);
+    this._preload(url);
     return this.sub$;
     // return await this._preload(url).catch(err => err);
   }

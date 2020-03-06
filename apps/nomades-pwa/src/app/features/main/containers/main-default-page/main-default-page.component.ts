@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 // libs
-import { UsersStoreService } from '@nomades-network/ngrx/lib/users/users-store.service';
 import { IUser } from '@nomades-network/api-interfaces';
-import { Observable, BehaviorSubject } from 'rxjs';
-
+import { UsersStoreService } from '@nomades-network/ngrx/lib/users/users-store.service';
 
 @Component({
   selector: 'nomades-network-main-default-page',
@@ -30,41 +29,65 @@ import { Observable, BehaviorSubject } from 'rxjs';
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <!-- content for feed -->
-      <ion-grid *ngIf="!isSearching">
-        <ion-row>
-          <ion-col>
-            data feed
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-      <!-- content for search result -->  
-      <ion-grid *ngIf="isSearching && users$|async as users">
-        <ion-row *ngIf="users?.length > 0">
-          <ion-col>
-            <ion-list>
-              <ion-list-header>
-                <ion-label>Liste des utilisateurs</ion-label>
-              </ion-list-header>
-              <ion-item *ngFor="let user of users">
-                <ion-avatar slot="start">
-                  <ion-img [src]="user | gavatar | async"></ion-img>
-                </ion-avatar>
-                <label>
-                  {{user?.firstname}} {{user?.lastname}}
-                </label>
-              </ion-item>
-            </ion-list>
-          </ion-col>
-        </ion-row>  
-        <ion-row *ngIf="users?.length <= 0">
-          <ion-col>
-            <ion-text>
-              <p>pas d'utilisateurs touvé corresondant à votre critère de recherche.
-            </ion-text>
-          </ion-col>
-        </ion-row>      
-      </ion-grid>
+      <div *ngIf="users$|async as users">
+        <!-- content for feed -->
+        <ion-grid *ngIf="!isSearching">
+          <ion-row>
+            <ion-col>
+              <!-- list of all users -->
+              <ion-list>
+                <ion-item 
+                    (click)="navTo(user?._id)"
+                    *ngFor="let user of users"
+                    detail="true">
+                  <!-- <ion-avatar slot="start">
+                    <ion-img [src]="user | gavatar | async"></ion-img>
+                  </ion-avatar> -->
+                  <label>
+                    <p>
+                      <span *ngIf="user?.firstname?.length > 1">{{user?.firstname}} {{user?.lastname}}<br/></span>
+                      <small>{{user?.email}}</small>
+                    </p> 
+                  </label>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <!-- content for search result -->  
+        <ion-grid *ngIf="isSearching && users">
+          <ion-row *ngIf="users?.length > 0">
+            <ion-col>
+              <ion-list>
+                <ion-list-header>
+                  <ion-label>Liste des utilisateurs</ion-label>
+                </ion-list-header>
+                <ion-item
+                    (click)="navTo(user?._id)"
+                    *ngFor="let user of users"
+                    detail="true">
+                  <!-- <ion-avatar slot="start">
+                    <ion-img [src]="user | gavatar | async"></ion-img>
+                  </ion-avatar> -->
+                  <label>
+                    <p>
+                      <span *ngIf="user?.firstname?.length > 1">{{user?.firstname}} {{user?.lastname}}<br/></span>
+                      <small>{{user?.email}}</small>
+                    </p> 
+                  </label>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+          </ion-row>  
+          <ion-row *ngIf="users?.length <= 0">
+            <ion-col>
+              <ion-text>
+                <p>pas d'utilisateurs touvé corresondant à votre critère de recherche.
+              </ion-text>
+            </ion-col>
+          </ion-row>      
+        </ion-grid>
+      </div>
     </ion-content>
   `,
   styles: [``]
@@ -75,21 +98,29 @@ export class MainDefaultPageComponent  implements OnInit {
   users$: Observable<IUser[]>;
 
   constructor( 
-    private _store: UsersStoreService
+    private _store: UsersStoreService,
+    private _router: Router
   ) {
   }
   
   ngOnInit() {
-
+    this._store.dispatchLoadAction();
+    this.users$ = this._store.getUsers();
   }
 
   async search($event: CustomEvent) {
     const {detail: { value = null} = {}} = $event;
     // search user with included query in username
-    if (!value || value.length === 0)
+    if (!value || value.length === 0){
+      this._store.dispatchLoadAction();
       return this.isSearching = false;
-    console.log('search--->', value);
+    }
+    // dispatch rx action
     this._store.dispatchSearchAction(value);
-    this.users$ = this._store.getUsers();
+  }
+
+  async navTo(userId: string) {
+    // use router in place of [routerLink] caus it not work
+    this._router.navigate(['user/' + userId])
   }
 }

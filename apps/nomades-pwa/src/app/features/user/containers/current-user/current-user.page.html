@@ -8,16 +8,27 @@
   <!-- <pre *ngIf="user$|async as user" >
     {{user|json}}
   </pre> -->
-  
+    <!-- <div *ngIf="showWebcam" class="ion-text-center">
+      <webcam [height]="500" [width]="500" 
+              [trigger]="triggerObservable" 
+              (imageCapture)="handleImage($event)" 
+              [allowCameraSwitch]="true" 
+              [imageQuality]="1"
+              (click)="tackPicture()"></webcam>
+              <br/>
+      <ion-button *ngIf="showWebcam" (click)="tackPicture()">ok</ion-button>
+    </div> -->
 
-    <ion-grid *ngIf="user$|async as user">
+    <ion-grid [hidden]="showWebcam" *ngIf="user$|async as user">
     
       <ion-row class="ion-margin-bottom ion-padding-horizontal">
         <ion-col size="12" class="ion-text-center">
           <!-- Profil image -->
-          <ion-avatar (click)="tackPicture()">
+
+
+          <!-- <ion-avatar>
             <ion-img [src]="user | gavatar | async"></ion-img>
-          </ion-avatar>
+          </ion-avatar> -->
         </ion-col>
         <ion-col class="ion-margin-top">
           <!-- Display user name OR email -->
@@ -46,7 +57,7 @@
               [name]="(!sectionsEditable[index].value) ? 'create' : 'close'"
               size="small"
               [color]="(sectionsEditable[index].value) ? 'primary' : 'light-dark'"
-              class="ion-float-right descIconEdit"
+              class="ion-float-right descIconEdit ion-padding"
               (click)="toogleEditState(index)"></ion-icon>
           <!-- [Display] -->
           <ion-text class="descContentText" *ngIf="!sectionsEditable[index].value">
@@ -75,7 +86,7 @@
                 [name]="(!sectionsEditable[index].value) ? 'create' : 'close'"
                 size="small"
                 [color]="(sectionsEditable[index].value) ? 'primary' : 'light-dark'"
-                class="ion-float-right"
+                class="ion-float-right  ion-padding"
                 (click)="(section?.action)
                   ? section?.action(index)
                   : toogleEditState(index)"></ion-icon>

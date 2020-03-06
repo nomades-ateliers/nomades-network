@@ -15,6 +15,18 @@ export class UsersController {
     private readonly userService: UsersService
   ) {}
 
+  @Get('')
+  async getAllUsers(
+    @Req() req: Request
+  ): Promise<APIResponse> {
+    // check token
+    const user = (req as any).decoded;
+    // handle error
+    if (!user || !user.uid) throw new UnauthorizedException();
+    // return response    
+    return this.userService.getAllUser();
+  }
+
   @Get('isAuth')
   async isAuth(
     @Req() req: Request
@@ -32,8 +44,6 @@ export class UsersController {
     @Req() req: Request,
     @Query('query') value: string,
   ): Promise<APIResponse> {
-    console.log('xxxxx', value);
-    
     // check token
     const user = (req as any).decoded;
     // handle error
@@ -41,6 +51,13 @@ export class UsersController {
     if (!value) throw new HttpException('No query in request', 404);
     // return response    
     return this.userService.searchUsers(value.toLowerCase());
+  }
+
+  @Get('/confirm/:id')
+  async confirmEmail(
+    @Param('id') id: string,
+  ): Promise<APIResponse> {
+    return this.userService.confirmEmail(id);
   }
 
   @Get(':id')

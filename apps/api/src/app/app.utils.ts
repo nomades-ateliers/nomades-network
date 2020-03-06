@@ -1,5 +1,8 @@
 import { Request } from 'express';
 import * as jwt from 'jsonwebtoken';
+import { v4 } from 'uuid';
+// app
+import { redis } from './app.redis';
 import { environment } from '../environments/environment';
 
 /**
@@ -63,3 +66,13 @@ export const checkAuthentication = async (req: Request) => {
     return null;
   }
 }
+
+
+export const confirmEmailLink = async (uid: string): Promise<string> => {
+  // get random id
+  const id = v4();
+  // set data in redis with uniqu key and expire time
+  await redis.set(environment.prefix.confirmEmail + id, uid, 'ex', 60 * 60 * 15);
+  // return url ready to confirm email
+  return `${environment.fronts.pwa}/auth/confirm?token=${id}`;
+};
