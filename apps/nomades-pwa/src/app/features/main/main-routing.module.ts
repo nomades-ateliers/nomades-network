@@ -18,10 +18,10 @@ const routes: Routes = [
         loadChildren: () => import('../user/user.module').then(m => m.UserModule),
         canActivate: [AuthGuard]
       },
-      // {
-      //   path: 'confirme',
-      //   component: ConfirmePageComponent
-      // },
+      {
+        path: 'confirme',
+        component: ConfirmePageComponent
+      },
       {
         path: '',
         component: MainDefaultPageComponent,
