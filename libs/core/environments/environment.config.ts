@@ -174,7 +174,7 @@ const APPS = [...nxApps.map(app => {
             pass: process.env.MAILER_PASS || '${MAILER_PASS}',
             host: process.env.MAILER_HOST || '${MAILER_HOST}'
           },
-          getDBHost: () => 'mongodb://${DB_USER}:${DB_PWD}@${DB_HOST}/${DB_DDB}',
+          getDBHost: () => 'mongodb://' + (process.env.DB_USER || '${DB_USER}') + ':' + ( process.env.DB_PWD || '${DB_PWD}') + '@' + (process.env.DB_HOST || '${DB_HOST}') + '/' + (process.env.DB_DDB || '${DB_DDB}'),
           version: '${getVersion('./apps/api/package.json')}'
         };`
       });
