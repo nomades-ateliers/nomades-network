@@ -67,8 +67,8 @@ export class UsersController {
     @Query('action') action: string,
   ): Promise<APIResponse> {
     if (!id) throw new BadRequestException('incorrect params');
-    if (!user || user === 'nomades') throw new BadRequestException('incorrect params');
-    if (!action || action === 'authorize') throw new BadRequestException('incorrect params');
+    if (!user || user !== 'nomades') throw new BadRequestException('incorrect params');
+    if (!action || action !== 'authorize') throw new BadRequestException('incorrect params');
     return this.userService.confirmEmail(id);
   }
 

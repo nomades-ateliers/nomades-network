@@ -108,7 +108,7 @@ export class UsersService {
           Email de connection: ${currentUser.email}
         </p>
         <p>
-          Cliquez ici pour authoriser cet utilisateur à consulter "nomades.world": <a href="https://node29887-env-5468118.jcloud-ver-jpc.ik-server.com/api/users/authorize/${currentUser._id}?user=nomades&action=authorize>authoriser cet utilisateur</a>
+          Cliquez ici pour authoriser cet utilisateur à consulter "nomades.world": <a href="https://node29887-env-5468118.jcloud-ver-jpc.ik-server.com/api/users/authorize/${currentUser._id}?user=nomades&action=authorize">authoriser cet utilisateur</a>
         </p>
       `
     }).catch(err => err);
