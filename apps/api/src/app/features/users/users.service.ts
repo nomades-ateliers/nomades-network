@@ -242,8 +242,8 @@ export class UsersService {
     if (!_id) {
       throw new NotFoundException();
     }
-    // update user with confirmed: true
-    await this.userModel.update({ _id }, { confirmed: true });
+    // update user with verified: true
+    await this.userModel.update({ _id }, { verified: true });
     // delet redis key
     await redis.del(`${environment.prefix.confirmEmail}${id}`);
     // send basic response
