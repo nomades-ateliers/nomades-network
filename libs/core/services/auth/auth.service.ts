@@ -95,6 +95,6 @@ export class AuthService {
   }
    
   async confirm(id: string) {
-    return await this._http.get(`${environment.apiEndpoint}s/api/users/confirm/${id}`).pipe().toPromise()
+    return await this._http.get(`${environment.apiEndpoint}/api/users/confirm/${id}`).pipe().toPromise()
   }
 }
