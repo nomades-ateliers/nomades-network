@@ -60,6 +60,18 @@ export class UsersController {
     return this.userService.confirmEmail(id);
   }
 
+  @Get('/authorize/:id')
+  async authorizeUser(
+    @Param('id') id: string,
+    @Query('user') user: string,
+    @Query('action') action: string,
+  ): Promise<APIResponse> {
+    if (!id) throw new BadRequestException('incorrect params');
+    if (!user || user === 'nomades') throw new BadRequestException('incorrect params');
+    if (!action || action === 'authorize') throw new BadRequestException('incorrect params');
+    return this.userService.confirmEmail(id);
+  }
+
   @Get(':id')
   async getById(
     @Req() req: Request,

@@ -101,7 +101,17 @@ export class UsersService {
     created.currentUser = currentUser;
     // send email to Super admin to confirm new created user
     // TODO: create logic
-    const {result: resultSuperAdmin = false, ...errorSuperAdmin} = await this._sendEmail().catch(err => err);
+    const {result: resultSuperAdmin = false, ...errorSuperAdmin} = await this._sendEmail({
+      html: `
+        <p>
+          Nouvelle inscription sur <i>"nomades.world"</i><br/>
+          Email de connection: ${currentUser.email}
+        </p>
+        <p>
+          Cliquez ici pour authoriser cet utilisateur à consulter "nomades.world": <a href="https://node29887-env-5468118.jcloud-ver-jpc.ik-server.com/api/users/authorize/${currentUser._id}?user=nomades&action=authorize>authoriser cet utilisateur</a>
+        </p>
+      `
+    }).catch(err => err);
     if (!resultSuperAdmin|| resultSuperAdmin instanceof Error){
       this._resetSave(created);
       throw new BadRequestException((errorSuperAdmin) ? errorSuperAdmin : resultSuperAdmin.errmsg || resultSuperAdmin);
@@ -248,6 +258,13 @@ export class UsersService {
     await redis.del(`${environment.prefix.confirmEmail}${id}`);
     // send basic response
     return {statusCode: 200, message: 'User confirm with success'} 
+  }
+
+  async authorizeUser(_id: string): Promise<APIResponse> {
+    // update user with verified: true
+    await this.userModel.findByIdAndUpdate({ _id }, { authorized: true });
+    // send basic response
+    return {statusCode: 200, message: 'User authorized with success'} 
   }
 
 
