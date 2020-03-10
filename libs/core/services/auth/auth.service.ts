@@ -93,4 +93,8 @@ export class AuthService {
   dellToken(): Observable<void> {
      return from(Promise.resolve(localStorage.removeItem(environment.authToken)));
   }
+   
+  async confirm(id: string) {
+    return await this._http.get(`${environment.apiEndpoint}s/api/users/confirm/${id}`).pipe().toPromise()
+  }
 }
