@@ -74,5 +74,5 @@ export const confirmEmailLink = async (uid: string): Promise<string> => {
   // set data in redis with uniqu key and expire time
   await redis.set(environment.prefix.confirmEmail + id, uid, 'ex', 60 * 60 * 15);
   // return url ready to confirm email
-  return `${environment.fronts.pwa}/auth/confirm?token=${id}`;
+  return `${environment.fronts.pwa}/confirme?token=${id}`;
 };
