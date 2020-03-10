@@ -252,15 +252,16 @@ export class UsersService {
 
 
   private async _sendEmail(options?: ISendMailOptions): Promise<{result: boolean}> {
-    // send email confirmation
-    const {result = false, ...errorSendEmail} = (
-      environment.production &&
+    // only run in production
+    if (!environment.production) return {result: true};
+    // handle test user creation
+    if (
       options &&
       options.to &&
-      !options.to.includes('demo')
-    )
-      ? await this._mailerService.sendMail(options).catch(err => err)
-      : {result: true};
+      options.to.includes('demo')
+    ) return {result: true};
+    // send email confirmation
+    const {result = false, ...errorSendEmail} = await this._mailerService.sendMail(options).catch(err => err);
     // handle result error
     if (!result) {
       console.error('Unable to send email to new user');
