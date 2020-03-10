@@ -6,7 +6,7 @@ import { userSkillSchema } from './user-skill.schema';
 export const authSchema = new Schema({
   password: {
     type: String,
-    require: true,
+    required: true,
     // match: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
     index: true
   }
@@ -22,7 +22,7 @@ export const userSchema = new Schema<IUser & Document>({
   avatar: String,
   email: {
     type: String,
-    require: true,
+    required: true,
     match: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
     unique: true,
     index: true
@@ -48,7 +48,7 @@ export const userSchema = new Schema<IUser & Document>({
   },
   created: {
     type: Date,
-    require: false,
+    required: false,
     default: new Date()
   },
   desc: String,
