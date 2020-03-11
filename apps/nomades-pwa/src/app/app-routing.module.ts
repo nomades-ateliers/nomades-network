@@ -12,14 +12,17 @@ const ROUTES: Route[] = [
         canActivate: [NoAuthGuard]
       },
       {
-        path: '',
+        path: 'network',
         loadChildren: () => import('./features/main/main.module').then(m => m.MainModule),
-      }
+      },
+      {
+        path: '', redirectTo: 'auth', pathMatch: 'full'
+      },
     ],
   },
   {
-    path: 'index', redirectTo: '', pathMatch: 'full'
-  },
+    path: 'index', redirectTo: 'auth', pathMatch: 'full'
+  } 
 ];
 
 @NgModule({

@@ -90,7 +90,7 @@ export class MainPageComponent  implements OnInit {
   public navTo(path: string, menu: IonMenu) {
     (!path)
       ? this._router.navigate(['./'])
-      : this._router.navigate(['./'+ path]);
+      : this._router.navigate(['./network/'+ path]);
     menu.close();
   }
 

@@ -121,6 +121,6 @@ export class MainDefaultPageComponent  implements OnInit {
 
   async navTo(userId: string) {
     // use router in place of [routerLink] caus it not work
-    this._router.navigate(['user/' + userId])
+    this._router.navigate(['/network/user/' + userId])
   }
 }

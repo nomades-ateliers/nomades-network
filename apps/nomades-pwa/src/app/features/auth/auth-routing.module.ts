@@ -9,7 +9,7 @@ const routes: Routes = [
   {
     path: '',
     component: AuthPageComponent,
-    canActivate: [NoAuthGuard]
+    // canActivate: [NoAuthGuard]
   }
 ];
 
