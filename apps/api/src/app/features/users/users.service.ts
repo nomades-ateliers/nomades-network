@@ -263,7 +263,7 @@ export class UsersService {
 
   async authorizeUser(_id: string): Promise<APIResponse> {
     // update user with verified: true
-    await this.userModel.updateOne(_id, { authorized: true }).catch(err => err);
+    await this.userModel.updateOne({ _id }, { authorized: true }).catch(err => err);
     // send basic response
     return {statusCode: 200, message: 'User authorized with success'} 
   }
