@@ -69,7 +69,7 @@ export class UsersController {
     if (!id) throw new BadRequestException('incorrect params');
     if (!user || user !== 'nomades') throw new BadRequestException('incorrect params');
     if (!action || action !== 'authorize') throw new BadRequestException('incorrect params');
-    return this.userService.confirmEmail(id);
+    return this.userService.authorizeUser(id);
   }
 
   @Get(':id')
