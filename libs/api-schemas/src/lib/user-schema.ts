@@ -29,11 +29,11 @@ export const userSchema = new Schema<IUser & Document>({
   },
   lastname: {
     type: String,
-    required: false
+    required: true
   },
   firstname: {
     type: String,
-    require: false
+    require: true
   },
   contact: {
     street: String,
@@ -55,6 +55,7 @@ export const userSchema = new Schema<IUser & Document>({
   job: String,
   skills: [userSkillSchema],
   trainings: [userTrainingSchema],
-  verified: Boolean,
-  authorized: Boolean
+  // authorization control
+  verified: Boolean, // email confirmation
+  authorized: Boolean // admin activation
 });
