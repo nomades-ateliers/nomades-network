@@ -253,7 +253,7 @@ export class UsersService {
       throw new NotFoundException();
     }
     // update user with verified: true
-    await this.userModel.update({ _id }, { verified: true });
+    await this.userModel.update({ _id }, { verified: true }).catch(err => err);
     // delet redis key
     await redis.del(`${environment.prefix.confirmEmail}${id}`);
     // send basic response
@@ -262,7 +262,7 @@ export class UsersService {
 
   async authorizeUser(_id: string): Promise<APIResponse> {
     // update user with verified: true
-    await this.userModel.findByIdAndUpdate({ _id }, { authorized: true });
+    await this.userModel.findByIdAndUpdate(_id, { authorized: true }).catch(err => err);
     // send basic response
     return {statusCode: 200, message: 'User authorized with success'} 
   }
