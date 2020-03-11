@@ -102,6 +102,7 @@ export class UsersService {
     // send email to Super admin to confirm new created user
     // TODO: create logic
     const {result: resultSuperAdmin = false, ...errorSuperAdmin} = await this._sendEmail({
+      subject: EMAIL_DEFAULT['register'].subject,
       html: `
         <p>
           Nouvelle inscription sur <i>"nomades.world"</i><br/>
