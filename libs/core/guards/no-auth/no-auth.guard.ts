@@ -32,7 +32,7 @@ export class NoAuthGuard implements CanActivate {
             this.router.navigateByUrl('../confirme')
             return of(false);
           }
-          return this._redirectWallet('User is auth, redirect to wallet...' as any).toPromise();
+          return this._redirectMain('User is auth, redirect to main...' as any).toPromise();
         }
         return of(true)
       }),
@@ -40,14 +40,14 @@ export class NoAuthGuard implements CanActivate {
         if (err &&  err.statusCode && err.statusCode !== 200 && !err.user || !err.toString().includes('User is auth'))
           return of(true)
         // redirect to wallet module
-        return this._redirectWallet(err);
+        return this._redirectMain(err);
       })
     );
   }
 
-  private _redirectWallet(err: Error): Observable<false> {
+  private _redirectMain(err: Error): Observable<false> {
     if (!environment.production) console.log('[NoAuthGuard]: ', err);
-    this.router.navigateByUrl('/wallet')
+    this.router.navigateByUrl('/')
     return of(false);
   }
 }

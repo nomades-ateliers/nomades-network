@@ -35,7 +35,10 @@ export class AuthEffects {
         return this._handleErrors({message: 'User no verified'});
       if (result && result.currentUser && !result.currentUser.authorized)
         return this._handleErrors({message: 'User no authorized'})
-      return of(new Auth.LoginSuccessAction(result))
+      return of(
+        new CurrentUser.LoadSuccessAction({currentUser: result.currentUser}),
+        new Auth.LoginSuccessAction(result)
+        )
     }),
     catchError((err: any) => of(new Auth.ErrorAction(err)))
   );
@@ -76,7 +79,7 @@ export class AuthEffects {
   );
 
   @Effect() logoutAction$ = this._action$.pipe(
-    ofType(Auth.AuthActions.LOGOUT),
+    ofType(Auth.AuthActions.LOGOUT, "[Auth] Logout"),
     switchMap(() => this._auth.doLogout()),
     switchMap(() =>
       concat(
