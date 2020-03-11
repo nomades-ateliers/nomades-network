@@ -35,10 +35,17 @@ export class AuthEffects {
         return this._handleErrors({message: 'User no verified'});
       if (result && result.currentUser && !result.currentUser.authorized)
         return this._handleErrors({message: 'User no authorized'})
-      return of(
-        new CurrentUser.LoadSuccessAction({currentUser: result.currentUser}),
-        new Auth.LoginSuccessAction(result)
-        )
+      return concat( 
+        of(new Auth.LoginSuccessAction(result)),
+        of(new Auth.TokenSaveSuccessAction(result)),
+        of(new CurrentUser.LoadSuccessAction({currentUser: result.currentUser}))
+      )
+    }),
+    tap(_ => {
+      console.log('redirect user to index app...');      
+      const returnUrl = this._route.snapshot.queryParams['returnUrl'] || '';
+      this._router.navigate([`/network`]);
+      // this._router.navigate([`/${returnUrl ? returnUrl : 'index'}`]);
     }),
     catchError((err: any) => of(new Auth.ErrorAction(err)))
   );
@@ -56,22 +63,17 @@ export class AuthEffects {
       if (!result)
         return this._handleErrors({message: 'No user found'});
       if (result && !result.currentUser)
-        return this._handleErrors({message: 'User not found'});
+        return this._handleErrors(result as any);
       if (result && result.currentUser && !result.currentUser.verified)
         return this._handleErrors({message: 'User no verified'});
       if (result && result.currentUser && !result.currentUser.authorized)
         return this._handleErrors({message: 'User no authorized'});
       return (result && result.currentUser && result.currentUser.authorized && result.currentUser.verified)
        ? concat(
-            of(
-              new Auth.CheckAuthSuccessAction(result),
-              new CurrentUser.LoadSuccessAction({currentUser: result.currentUser}),
-            )
+            of(new CurrentUser.LoadSuccessAction({currentUser: result.currentUser}))
           )
         : concat(
-            of(
-              new Auth.CheckAuthNoUserSuccessAction()
-            )
+            of(new Auth.CheckAuthNoUserSuccessAction())
           )
     }),
     // tap(_=> console.log('in effect ...')),
@@ -90,7 +92,7 @@ export class AuthEffects {
       )
     ),
     switchMap((res: any) => {
-      this._router.navigate(['/auth']);
+      this._router.navigate(['./auth']);
       return of(res);
     }),
     catchError((err: any) => this._handleErrors(err))
@@ -126,30 +128,6 @@ export class AuthEffects {
       // await this._router.navigate([`./`]).catch(err=> err);
     }),
     catchError((err: any) => this._handleErrors(err)),
-  );
-
-  @Effect() userSuccessAction$ = this._action$.pipe(
-    ofType(
-      // Auth.AuthActions.CREATE_SUCCESS,
-      Auth.AuthActions.LOGIN_SUCCESS,
-      // CurrentUser.CurrentUserActions.LOAD_SUCCESS
-    ),
-    switchMap((action: any) => {
-      const { payload = null } = action;
-      return payload
-        ? concat(
-            of(new Auth.TokenSaveSuccessAction(payload)),
-            // of(new Auth.CheckAuthAction())
-          )
-        : this._handleErrors();
-    }),
-    catchError((err: any) => this._handleErrors(err)),
-    tap(_ => {
-      console.log('redirect user to index...');      
-      const returnUrl = this._route.snapshot.queryParams['returnUrl'] || '';
-      this._router.navigate([`/index`]);
-      // this._router.navigate([`/${returnUrl ? returnUrl : 'index'}`]);
-    })
   );
 
   private _handleErrors(err = { message: null }) {
