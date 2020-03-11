@@ -29,11 +29,13 @@ export const userSchema = new Schema<IUser & Document>({
   },
   lastname: {
     type: String,
-    required: true
+    required: true,
+    minlength: 1
   },
   firstname: {
     type: String,
-    require: true
+    require: true,
+    minlength: 1
   },
   contact: {
     street: String,
