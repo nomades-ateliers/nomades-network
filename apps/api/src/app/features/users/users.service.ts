@@ -253,7 +253,7 @@ export class UsersService {
       throw new NotFoundException();
     }
     // update user with verified: true
-    await this.userModel.update({ _id }, { verified: true }).catch(err => err);
+    await this.userModel.updateOne({ _id }, { verified: true }).catch(err => err);
     // delet redis key
     await redis.del(`${environment.prefix.confirmEmail}${id}`);
     // send basic response
