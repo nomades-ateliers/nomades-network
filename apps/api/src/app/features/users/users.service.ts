@@ -105,6 +105,7 @@ export class UsersService {
       html: `
         <p>
           Nouvelle inscription sur <i>"nomades.world"</i><br/>
+          Utilisateur: ${currentUser.firstname} ${currentUser.lastname} 
           Email de connection: ${currentUser.email}
         </p>
         <p>
