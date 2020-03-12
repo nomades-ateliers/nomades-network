@@ -15,6 +15,8 @@ import { ICurrentUserState } from '@nomades-network/ngrx/lib/currentUser/current
 @Injectable()
 export class AuthGuard   implements CanActivate {
 
+  returnUrl: string;
+
   constructor(
     private _http: HttpClient,
     public router: Router,
@@ -24,13 +26,16 @@ export class AuthGuard   implements CanActivate {
   }
    
   canActivate(
+    route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot
   ) {
     console.log('[AUTH GUARD]');
     // const Authorization = localStorage.getItem(environment.authToken);
-    return this._requestStore();
+    return this._requestStore(route, routerState);
   }
 
-  private _requestStore() {
+  private _requestStore(route, routerState) {
+    const { returnUrl = routerState.url } = route.queryParams;
+    this.returnUrl = returnUrl || null;
     // this._storeService.dispatchCheckAuthAction();
     this._store.dispatch({type: Auth.AuthActions.CHECK_AUTH})
     // return this._http.get(environment.apiEndpoint + '/api/users/isauth').pipe(
@@ -77,7 +82,8 @@ export class AuthGuard   implements CanActivate {
 
   private _redirectAuthPage(err: Error): Observable<false> {
     if (!environment.production) console.log('[AuthGuard] _redirectAuthPage: ', err);
-    this.router.navigateByUrl('/auth')
+    this.router.navigate(['/auth'], {queryParams: {returnUrl: this.returnUrl}});
+    // this.router.navigateByUrl('/auth')
     return of(false);
   }
 
