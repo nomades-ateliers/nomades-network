@@ -4,6 +4,7 @@
 /dist
 /tmp
 /out-tsc
+/docs/**/*.xlsx
 
 # dependencies
 /node_modules
