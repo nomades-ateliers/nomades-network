@@ -26,10 +26,10 @@ import { AlertController } from '@ionic/angular';
         <p>
           Tu recevera une confirmation par mail.
         </p>
-        <ion-button [routerLink]="'../auth'">retour au login</ion-button>
+        <ion-button [routerLink]="'/auth'">retour au login</ion-button>
       </div>
       <div *ngIf="confirm">
-        <ion-button [routerLink]="'../auth'">retour au login</ion-button>
+        <ion-button [routerLink]="'/auth'">retour au login</ion-button>
       </div>
     </ion-content>
   `,
