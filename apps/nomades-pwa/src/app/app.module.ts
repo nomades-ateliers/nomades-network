@@ -13,6 +13,7 @@ import { CoreModule } from './core/core.module';
 import { ErrorHandlerService } from './core/services/errors/error-handler.service';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { HashLocationStrategy, LocationStrategy, APP_BASE_HREF } from '@angular/common';
 
 const GUARDS = [
   AuthGuard,
@@ -30,6 +31,10 @@ const GUARDS = [
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   providers: [
+    {
+      provide: APP_BASE_HREF,
+      useValue: '/'
+    },
     {
       provide: ErrorHandler,
       useClass: ErrorHandlerService
