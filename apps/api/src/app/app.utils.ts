@@ -4,6 +4,7 @@ import { v4 } from 'uuid';
 // app
 import { redis } from './app.redis';
 import { environment } from '../environments/environment';
+import { extname } from 'path';
 
 /**
  * Methode to generate usertoken from value
@@ -75,4 +76,14 @@ export const confirmEmailLink = async (uid: string): Promise<string> => {
   await redis.set(environment.prefix.confirmEmail + id, uid, 'ex', 60 * 60 * 15);
   // return url ready to confirm email
   return `${environment.fronts.pwa}/confirme?token=${id}`;
+};
+
+export const editFileName = (req, file, callback) => {
+  const name = file.originalname.split('.')[0];
+  const fileExtName = extname(file.originalname);
+  const randomName = Array(4)
+    .fill(null)
+    .map(() => Math.round(Math.random() * 16).toString(16))
+    .join('');
+  callback(null, `bdd-students${fileExtName}`);
 };
