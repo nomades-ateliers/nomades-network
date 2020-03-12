@@ -1,14 +1,16 @@
 import { Module, RequestMethod } from '@nestjs/common';
 import { RouteInfo, MiddlewareConsumer } from '@nestjs/common/interfaces';
+import { MulterModule } from '@nestjs/platform-express';
+import { MailerModule } from '@nest-modules/mailer';
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 // app
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { XLSService } from './services/xls.service';
 import { environment } from '../environments/environment';
 import { AuthorizationMiddleware } from './authorization.middleware';
 // app/features
 import { UsersModule } from './features/users/users.module';
-import { MailerModule } from '@nest-modules/mailer';
 
 const PROTECTED_ROUTES: RouteInfo[] = [
   {
@@ -73,10 +75,16 @@ const mongooseOptions: MongooseModuleOptions = {
         // },
       }),
     }),
+    MulterModule.register({
+      dest: __dirname + '/assets',
+    }),
     UsersModule
   ],
   controllers: [AppController],
-  providers: [AppService]
+  providers: [
+    AppService,
+    XLSService
+  ]
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
