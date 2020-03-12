@@ -124,7 +124,7 @@ export class AuthEffects {
     ),
     tap(async _ => {
       console.log('redirect user to ./confirm...');
-      await this._router.navigate([`./confirme`]).catch(err=> err);
+      await this._router.navigate([`./network/confirme`]).catch(err=> err);
       // await this._router.navigate([`./`]).catch(err=> err);
     }),
     catchError((err: any) => this._handleErrors(err)),
