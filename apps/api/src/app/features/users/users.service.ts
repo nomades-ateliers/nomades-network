@@ -3,6 +3,7 @@ import * as bcrypt from 'bcryptjs';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Document } from 'mongoose';
 import { ISendMailOptions } from '@nest-modules/mailer';
+import { readFileSync }  from 'fs';
 // libs
 import { APIResponse, IUser, IAuth, User } from '@nomades-network/api-interfaces';
 // app
@@ -10,6 +11,8 @@ import { getToken, confirmEmailLink } from '../../app.utils';
 import { environment } from '../../../environments/environment';
 import { AppMailerService, EMAIL_DEFAULT } from '../../services/mailer.service';
 import { redis } from '../../app.redis';
+import { dirname } from 'path';
+import { XLSService } from '../../services/xls.service';
 
 interface ICreatedObject {auth?: IAuth, currentUser?: IUser};
 
@@ -19,7 +22,8 @@ export class UsersService {
   constructor(
     @InjectModel('Auth') private readonly authModel: Model<IAuth & Document>,
     @InjectModel('User') private readonly userModel: Model<IUser & Document>,
-    private readonly _mailerService: AppMailerService
+    private readonly _mailerService: AppMailerService,
+    private readonly _xls: XLSService,
   ) {}
 
 
@@ -90,7 +94,7 @@ export class UsersService {
     // delete secure key
     delete data.verified;
     // create User in User Collection
-    const currentUser: IUser = await new this.userModel(
+    let currentUser: IUser = await new this.userModel(
       new User({...data, uid: auth._id})
     ).save().then(res => res.toObject()).catch(err => err);
     // handle error    
@@ -99,6 +103,8 @@ export class UsersService {
       throw new BadRequestException((currentUser as any).errmsg || currentUser);
     }
     created.currentUser = currentUser;
+    // update user with existing data from students list
+    currentUser = await this._checkExistingStudent(currentUser)
     // send email to Super admin to confirm new created user
     // TODO: create logic
     const {result: resultSuperAdmin = false, ...errorSuperAdmin} = await this._sendEmail({
@@ -288,5 +294,106 @@ export class UsersService {
     }
     // returtn result as object
     return {result};
+  }
+
+  private async _checkExistingStudent(user: IUser) {
+    const students = await new Promise((resolve, reject) => {
+      try {
+        const result = this._xls.excelToJson(__dirname +'/assets/bdd-students.xlsx');
+        const sheet = Object.keys(result)[0];
+        const data = this._xls.normalize(result[sheet]);    
+        resolve(data);
+      } catch (error) {
+        reject(error);
+      }
+    });
+    console.log('-----', students);
+    if (!students || (students as []).length <= 0) return user;
+    // search existing user in students list
+    const find = (students as any[]).find(s => 
+      (s.nom || '').toLowerCase() === user.lastname.toLowerCase() &&
+      (s.prenom || '').toLowerCase() === user.firstname.toLowerCase()
+    );
+    // handle unexisting user
+    if (!find) return user;
+    // update user with existing data
+    const objectReady: IUser = {
+      email: user.email,
+      firstname: find.prenom || user.firstname,
+      lastname: find.nom || user.lastname,
+      contact: {
+        street: find.adresse || (user.contact || {street: null}).street,
+        zipCode: find.code_postal || (user.contact || {zipCode: null}).zipCode,
+        city: find.ville || (user.contact || {city: null}).city,
+        country: find.pays || (user.contact || {country: null}).country
+      },
+      mobile_phone: find.mobile || user.mobile_phone,
+      bday: find.date_de_naissance || user.bday,
+      student_number: find.numero_eleve || user.student_number,
+      student_year: find.numero_annee || user.student_year,
+      trainings: []
+    };
+    // add existing trainings data
+    if (find && find.dmm)
+      objectReady.trainings = [...objectReady.trainings, {
+        name: 'Digital Marketing Manager',
+        cerfifiedState: find.dmm,
+        created: new Date()
+      }];
+    if (find && find.wd)
+      objectReady.trainings = [...objectReady.trainings, {
+        name: 'Web Designer',
+        cerfifiedState: find.wd,
+        created: new Date()
+      }];
+    if (find && find.wpr)
+      objectReady.trainings = [...objectReady.trainings, {
+        name: 'Web Programmer',
+        cerfifiedState: find.wpr,
+        created: new Date()
+      }];
+    if (find && find.mwad)
+      objectReady.trainings = [...objectReady.trainings, {
+        name: 'Mobile Web Application Developper',
+        cerfifiedState: find.mwad,
+        created: new Date()
+      }];
+    if (find && find.wdev)
+      objectReady.trainings = [...objectReady.trainings, {
+        name: 'Web Developper',
+        cerfifiedState: find.wdev,
+        created: new Date()
+      }];
+    if (find && find.drupal)
+      objectReady.trainings = [...objectReady.trainings, {
+        name: 'Drupal',
+        cerfifiedState: find.drupal,
+        created: new Date()
+      }];
+    if (find && find.symfony)
+      objectReady.trainings = [...objectReady.trainings, {
+        name: 'Symfony',
+        cerfifiedState: find.symfony,
+        created: new Date()
+      }];
+    if (find && find.webpublisher)
+    objectReady.trainings = [...objectReady.trainings, {
+      name: 'Web Publisher',
+      cerfifiedState: find.webpublisher,
+      created: new Date()
+    }];
+    // request db to update user object updated
+    const currentUser = await this.userModel.findOneAndUpdate({_id: user._id}, objectReady, { new: true, runValidators: true}).exec()
+      .then(res => (res) ? res.toObject() : res)
+      .catch(err => err);
+    // handle error
+    if (!currentUser || !currentUser._id || currentUser instanceof Error)
+      throw new HttpException(
+        currentUser.errmsg || currentUser.message || currentUser,
+        HttpStatus.BAD_REQUEST
+      );
+    // return result user updated
+    console.log('updated user with data from student list: ', currentUser);
+    return currentUser;
   }
 }
