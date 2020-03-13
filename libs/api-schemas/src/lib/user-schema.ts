@@ -55,6 +55,12 @@ export const userSchema = new Schema<IUser & Document>({
   },
   desc: String,
   job: String,
+
+  bday: Date,
+  student_number: Number,
+  student_year: Number,
+  mobile_phone: String,
+
   skills: [userSkillSchema],
   trainings: [userTrainingSchema],
   // authorization control
