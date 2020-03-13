@@ -5,7 +5,7 @@
 /tmp
 /out-tsc
 /docs/**/*.xlsx
-
+/**/*.rdb
 # dependencies
 /node_modules
 
