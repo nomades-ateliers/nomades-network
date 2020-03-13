@@ -12,13 +12,18 @@ export class User implements IUser {
   public verified?: boolean;
   public authorized?: boolean;
   // datas
+  public bday?: Date;
+  public student_number?: number;
+  public student_year?: number;
+  public mobile_phone?: string;
+
   public avatar?: string;
   public desc?: string;
   public job?: string;
   public skills?: IUserSkill[];
   public contact?: IAddress;
   public trainings?: (ITraining & {
-    cerfifiedState?: string;
+    cerfifiedState?: number;
     certifiedProject?: string
   })[];
   

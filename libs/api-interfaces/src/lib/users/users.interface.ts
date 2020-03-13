@@ -19,16 +19,21 @@ export interface IUser {
   firstname?: string;
   lastname?: string;
   created?: number;
+  // toggle authorization
   authorized?: boolean;
   verified?: boolean;
   // datas
   avatar?: string;
   desc?: string;
   job?: string;
+  bday?: Date;
+  student_number?: number;
+  student_year?: number;
+  mobile_phone?: string;
   skills?: IUserSkill[];
   contact?: IAddress;
   trainings?: (ITraining & {
-    cerfifiedState?: string;
+    cerfifiedState?: number;
     certifiedProject?: string
   })[];
 }
