@@ -32,8 +32,5 @@ export interface IUser {
   mobile_phone?: string;
   skills?: IUserSkill[];
   contact?: IAddress;
-  trainings?: (ITraining & {
-    cerfifiedState?: number;
-    certifiedProject?: string
-  })[];
+  trainings?: ITraining[];
 }

@@ -22,10 +22,7 @@ export class User implements IUser {
   public job?: string;
   public skills?: IUserSkill[];
   public contact?: IAddress;
-  public trainings?: (ITraining & {
-    cerfifiedState?: number;
-    certifiedProject?: string
-  })[];
+  public trainings?: ITraining[];
   
   constructor(params: Partial<IUser>) {
     Object.assign(this, params);
