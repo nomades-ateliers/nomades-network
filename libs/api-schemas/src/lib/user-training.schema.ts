@@ -5,6 +5,7 @@ export const userTrainingSchema = new Schema({
     type: String,
     required: true
   },
+  cerfifiedState: Number,
   certifiedProject: String,
   certifiedProjectUrl: String,
   created: {
