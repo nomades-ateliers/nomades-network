@@ -38,7 +38,13 @@ export class XLSService {
     return Object.keys(obj).reduce(
         (acc, key) => ({
           ...acc,
-          ...{ [keysMap[key] || key]: obj[key] }
+          ...{ [(keysMap[key] || key || '')
+            .toLowerCase()
+            .replace(/é/gi, "e")
+            .replace(/è/gi, "e")
+            .replace(/à/gi, "a")
+            .replace(/\s/g, '_')
+          ]: obj[key] }
         }),
       {}
     );
